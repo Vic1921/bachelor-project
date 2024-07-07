@@ -6,4 +6,6 @@ public interface IPinterestService {
     void getPin();
     void getPinComments();
     void postPin();
+
+    void init(String accessToken);
 }
