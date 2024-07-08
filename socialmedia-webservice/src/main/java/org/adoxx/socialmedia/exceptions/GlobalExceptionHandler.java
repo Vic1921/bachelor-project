@@ -8,8 +8,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(PinterestInitializationException.class)
-    public ResponseEntity<String> handlePinterestInitializationException(PinterestInitializationException ex) {
+    @ExceptionHandler(InitializationException.class)
+    public ResponseEntity<String> handlePinterestInitializationException(InitializationException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(BoardException.class)
+    public ResponseEntity<String> handlePinterestBoardException(BoardException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

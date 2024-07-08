@@ -70,9 +70,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.chrisdempewolf</groupId>
-			<artifactId>pinterest-sdk</artifactId>
-			<version>4.2.1</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webflux</artifactId>
+			<version>6.1.10</version>
 		</dependency>
 	</dependencies>
 
