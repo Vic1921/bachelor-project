@@ -90,6 +90,17 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
     }
 
     @Override
+    public Mono<String> getPins() {
+        return webClient.get()
+                .uri("/pins")
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnError(error -> {
+                    throw new PinNotFoundException("Failed to get pins: " + error.getMessage());
+                });
+    }
+
+    @Override
     public Mono<String> deletePin(String pinId) {
         return webClient.delete()
                 .uri("/pins/" + pinId)
@@ -128,7 +139,7 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
     public Mono<String> postPinWithBase64(String boardId, String title, String description, String base64Image, String altText) {
         Map<String, Object> mediaSource = Map.of(
                 "source_type", "image_base64",
-                "content_type", "image/jpeg", // or "image/png" based on image format
+                "content_type", "image/png", // or "image/png" based on image format
                 "data", base64Image,
                 "is_standard", true // Adjust based on beta user status if necessary
         );

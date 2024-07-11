@@ -25,7 +25,7 @@ public class WebClientConfig {
         log.info("Creating WebClient bean with Pinterest access token.");
 
         return WebClient.builder()
-                .baseUrl("https://api.pinterest.com/v5")
+                .baseUrl("https://api-sandbox.pinterest.com/v5")
                 .defaultHeader("Authorization", "Bearer " + accessToken)
                 .defaultHeader("Content-Type", "application/json")
                 .build();
