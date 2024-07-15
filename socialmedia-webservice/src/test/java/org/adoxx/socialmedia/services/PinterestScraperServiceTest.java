@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -28,16 +27,17 @@ class PinterestScraperServiceTest {
     void teardown() {
         pinterestScraperService.teardown();
     }
-/*
+
     @Test
     void testLogin() {
         assertTrue(pinterestScraperService.login());
-    }*/
+    }
 
     @Test
     void testFetchComments() {
         pinterestScraperService.login();
         List<String> comments = pinterestScraperService.fetchComments("1124703706933061580");
         assertFalse(comments.isEmpty());
+        assertEquals(2, comments.size());
     }
 }

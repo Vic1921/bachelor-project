@@ -1,10 +1,7 @@
 package org.adoxx.socialmedia.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -75,10 +72,17 @@ public class PinterestScraperService {
         try {
             driver.get("https://www.pinterest.com/pin/" + pinId);
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(12));
+
+            // Scroll a little to ensure the comments section can load -> add more if multiple comments are expected; Might need to adjust dynamically to scroll through the whole comment section
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,250)", "");
+
+            // Wait a bit to give the page time to load comments
+            TimeUnit.SECONDS.sleep(5);
 
             // Try clicking on the "2 Comments" section or its container to reveal the comments
             WebElement commentsSection = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//h2[contains(text(), 'Comments')]/..")));
+            // WebElement commentsSection = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]/div/div[2]/div[2]/div[5]/div/div[2]/div/div/div[1]/div/div")));
             commentsSection.click();
 
             // Wait for comments to be visible
@@ -92,6 +96,7 @@ public class PinterestScraperService {
 
             return commentElements.stream()
                     .map(WebElement::getText)
+                    .filter(text -> !text.isEmpty())
                     .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Fetching comments failed", e);
