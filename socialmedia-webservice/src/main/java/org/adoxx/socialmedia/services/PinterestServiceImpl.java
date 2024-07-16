@@ -5,12 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.adoxx.socialmedia.exceptions.BoardException;
 import org.adoxx.socialmedia.exceptions.PinException;
 import org.adoxx.socialmedia.exceptions.PinNotFoundException;
+import org.adoxx.socialmedia.models.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Service
@@ -18,11 +21,13 @@ import java.util.Map;
 public class PinterestServiceImpl implements IBoardService, IPinService {
 
     private final WebClient webClient;
+    private final PinterestScraperService pinterestScraperService;
 
     // CTOR
     @Autowired
     public PinterestServiceImpl(WebClient webClient) {
         this.webClient = webClient;
+        this.pinterestScraperService = new PinterestScraperService();
     }
 
 
@@ -161,12 +166,19 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
     }
 
 
-    // ---- Selenium Comment Reconnaissance Part ----
-    @Override
-    public void getPinComments() {
-        // TODO: Implement getPinComments method with the help of Selenium in absence of Pinterest API appropriate endpoint
-    }
+    public List<Comment> getPinComments(String pinId) {
+        pinterestScraperService.login(); // Step 1: Login
 
+        List<String> rawComments = pinterestScraperService.fetchComments(pinId); // Step 2: Fetch comments
+
+        // TODO: Add persistence logic here thru CommentRepository
+        // commentRepository.saveAll(comments);
+
+        // Step 3: Map raw comments to Comment records and return the list
+        return rawComments.stream()
+                .map(comment -> new Comment(comment, pinId))
+                .collect(Collectors.toList()); // Return comments or analysis results as needed
+    }
 
 
 }

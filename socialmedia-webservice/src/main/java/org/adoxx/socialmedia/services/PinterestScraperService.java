@@ -80,7 +80,7 @@ public class PinterestScraperService {
             // Wait a bit to give the page time to load comments
             TimeUnit.SECONDS.sleep(5);
 
-            // Try clicking on the "2 Comments" section or its container to reveal the comments
+            // Try clicking on the "Comments" section or its container to reveal the comments or alternatively use the xpath below
             WebElement commentsSection = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//h2[contains(text(), 'Comments')]/..")));
             // WebElement commentsSection = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]/div/div[2]/div[2]/div[5]/div/div[2]/div/div/div[1]/div/div")));
             commentsSection.click();
@@ -91,8 +91,6 @@ public class PinterestScraperService {
             // Fetch all comments
             List<WebElement> commentElements = driver.findElements(By.className("text-container"));
 
-            // print the comments
-            commentElements.forEach(comment -> System.out.println(comment.getText()));
 
             return commentElements.stream()
                     .map(WebElement::getText)

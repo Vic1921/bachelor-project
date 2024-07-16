@@ -1,6 +1,10 @@
 package org.adoxx.socialmedia.services;
 
+import org.adoxx.socialmedia.models.Comment;
+
+import java.util.List;
+
 public interface ISentimentAnalysisService {
 
-    void analyzeSentiment(String text);
+    String analyzeSentiment(String text);
 }
