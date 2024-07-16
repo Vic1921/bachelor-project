@@ -24,7 +24,7 @@ public class AnalysisController {
     @Autowired
     private ICommentCategoryService categoryService;
 
-    @GetMapping("/{pinId}}")
+    @GetMapping("/{pinId}")
     public List<SentimentResult> getAnalysis(@PathVariable String pinId) {
         List<Comment> comments = pinService.getPinComments(pinId);
 
