@@ -23,17 +23,18 @@ public class SentimentAnalysisServiceImpl implements ISentimentAnalysisService {
         pipeline = new StanfordCoreNLP(props);
     }
 
+    @Override
+    public List<SentimentResult> analyzeComments(List<Comment> comments) {
+        return comments.stream()
+                .map(comment -> new SentimentResult(comment, analyzeSentiment(comment.text())))
+                .collect(Collectors.toList());
+    }
+
     public String analyzeSentiment(String text) {
         CoreDocument document = pipeline.processToCoreDocument(text);
         for (CoreSentence sentence : document.sentences()) {
             return sentence.sentiment();
         }
         return "NEUTRAL"; // Default if no sentiment is found
-    }
-
-    public List<SentimentResult> analyzeComments(List<Comment> comments) {
-        return comments.stream()
-                .map(comment -> new SentimentResult(comment, analyzeSentiment(comment.text())))
-                .collect(Collectors.toList());
     }
 }

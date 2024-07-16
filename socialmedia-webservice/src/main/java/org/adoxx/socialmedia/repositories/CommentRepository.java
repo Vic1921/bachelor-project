@@ -8,4 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 }
+
+
+Might fail because of uninitialized config of H2 database -> same for the other repositories
 */

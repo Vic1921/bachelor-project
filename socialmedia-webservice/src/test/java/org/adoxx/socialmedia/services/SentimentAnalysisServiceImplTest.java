@@ -27,7 +27,6 @@ public class SentimentAnalysisServiceImplTest {
         String text = "I love this product!";
         String sentiment = sentimentAnalysisService.analyzeSentiment(text);
         assertNotNull(sentiment); // Ensure a sentiment is returned
-        // Note: The exact sentiment might vary based on the NLP model's interpretation
     }
 
     @Test
@@ -39,6 +38,5 @@ public class SentimentAnalysisServiceImplTest {
         List<SentimentResult> results = sentimentAnalysisService.analyzeComments(comments);
         assertNotNull(results); // Ensure results are returned
         assertEquals(2, results.size()); // Ensure a result is returned for each comment
-        // Note: The exact sentiments might vary based on the NLP model's interpretation
     }
 }

@@ -1,9 +1,10 @@
 package org.adoxx.socialmedia.services;
 
-import org.adoxx.socialmedia.models.CategoryResult;
+import org.adoxx.socialmedia.models.Comment;
+import org.adoxx.socialmedia.models.ModelFeedbackOverview;
 
 import java.util.List;
 
 public interface ICommentCategoryService {
-    List<CategoryResult> getCategories(String text);
+    ModelFeedbackOverview categorizeComments(List<Comment> text);
 }
