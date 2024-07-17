@@ -20,7 +20,8 @@ class PinterestScraperServiceTest {
 
     @BeforeAll
     void setup() {
-        pinterestScraperService.setup();
+        // lazy init
+        // pinterestScraperService.setup();
     }
 
     @AfterAll
@@ -35,7 +36,7 @@ class PinterestScraperServiceTest {
 
     @Test
     void testFetchComments() {
-        pinterestScraperService.login();
+        // pinterestScraperService.login();
         List<String> comments = pinterestScraperService.fetchComments("1124703706933061580");
         assertFalse(comments.isEmpty());
         assertEquals(10, comments.size());

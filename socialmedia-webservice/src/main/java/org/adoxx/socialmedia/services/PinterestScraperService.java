@@ -31,11 +31,13 @@ public class PinterestScraperService {
     @Value("${pinterest.password}")
     private String password;
 
-    @PostConstruct
-    public void setup() {
-        System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-        driver = new ChromeDriver();
-        driver.manage().window().setSize(new Dimension(1300, 768));
+    // lazy initialization of the WebDriver
+    private void initializeWebDriver() {
+        if (driver == null) {
+            System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+            driver = new ChromeDriver();
+            driver.manage().window().setSize(new Dimension(1300, 768));
+        }
     }
 
     @PreDestroy
@@ -46,6 +48,9 @@ public class PinterestScraperService {
     }
 
     public boolean login() {
+
+        initializeWebDriver();
+
         try {
             driver.get("https://www.pinterest.com/login/");
 
@@ -69,6 +74,9 @@ public class PinterestScraperService {
     }
 
     public List<String> fetchComments(String pinId) {
+        // Ensure the user is logged in before fetching comments
+        login();
+
         try {
             driver.get("https://www.pinterest.com/pin/" + pinId);
 
