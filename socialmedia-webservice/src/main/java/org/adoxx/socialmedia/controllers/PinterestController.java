@@ -24,26 +24,26 @@ public class PinterestController {
     // ---- BOARD SERVICE ----
 
 
-    @PostMapping("/createBoard")
+    @PostMapping("/board")
     public Mono<ResponseEntity<String>> createBoard(@RequestBody CreateBoardRequest createBoardRequest) {
         return pinterestService.createBoard(createBoardRequest.name(), createBoardRequest.description())
                 .map(ResponseEntity::ok);
     }
 
-    @RequestMapping("/getBoard")
-    public Mono<ResponseEntity<String>> getBoard(@RequestParam String boardId) {
+    @GetMapping("/board/{boardId}")
+    public Mono<ResponseEntity<String>> getBoard(@PathVariable String boardId) {
         return pinterestService.getBoard(boardId)
                 .map(ResponseEntity::ok);
     }
 
-    @RequestMapping("/getBoards")
+    @GetMapping("/boards")
     public Mono<ResponseEntity<String>> getBoards() {
         return pinterestService.getBoards()
                 .map(ResponseEntity::ok);
     }
 
-    @DeleteMapping("/deleteBoard")
-    public Mono<ResponseEntity<String>> deleteBoard(@RequestParam String boardId) {
+    @DeleteMapping("/board/{boardId}")
+    public Mono<ResponseEntity<String>> deleteBoard(@PathVariable String boardId) {
         return pinterestService.deleteBoard(boardId)
                 .map(ResponseEntity::ok);
     }
@@ -52,20 +52,20 @@ public class PinterestController {
     // ---- PIN SERVICE ----
 
 
-    @RequestMapping("/getPin")
-    public Mono<ResponseEntity<String>> getPin(@RequestParam String pinId) {
+    @GetMapping("/pin/{pinId}")
+    public Mono<ResponseEntity<String>> getPin(@PathVariable String pinId) {
         return pinService.getPin(pinId)
                 .map(ResponseEntity::ok);
     }
 
-    @RequestMapping("/getPins")
+    @GetMapping("/getPins")
     public Mono<ResponseEntity<String>> getPins() {
         return pinService.getPins()
                 .map(ResponseEntity::ok);
     }
 
-    @DeleteMapping("/deletePin")
-    public Mono<ResponseEntity<String>> deletePin(@RequestParam String pinId) {
+    @DeleteMapping("/pin/{pinId}")
+    public Mono<ResponseEntity<String>> deletePin(@PathVariable String pinId) {
         return pinService.deletePin(pinId)
                 .map(ResponseEntity::ok);
     }
