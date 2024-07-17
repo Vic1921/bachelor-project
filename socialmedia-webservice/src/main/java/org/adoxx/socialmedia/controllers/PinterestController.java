@@ -1,5 +1,6 @@
 package org.adoxx.socialmedia.controllers;
 
+import org.adoxx.socialmedia.models.requests.CreateBoardRequest;
 import org.adoxx.socialmedia.models.requests.PinRequest;
 import org.adoxx.socialmedia.models.requests.PinRequestBase64;
 import org.adoxx.socialmedia.services.IPinService;
@@ -24,8 +25,8 @@ public class PinterestController {
 
 
     @PostMapping("/createBoard")
-    public Mono<ResponseEntity<String>> createBoard(@RequestParam String name, @RequestParam String description) {
-        return pinterestService.createBoard(name, description)
+    public Mono<ResponseEntity<String>> createBoard(@RequestBody CreateBoardRequest createBoardRequest) {
+        return pinterestService.createBoard(createBoardRequest.name(), createBoardRequest.description())
                 .map(ResponseEntity::ok);
     }
 
@@ -89,15 +90,6 @@ public class PinterestController {
                         pinRequestBase64.getBase64Image(),
                         pinRequestBase64.getAltText())
                 .map(ResponseEntity::ok);
-    }
-
-
-    // ---- HELLO TEST ENDPOINT ----
-
-    @RequestMapping("/hello")
-    public String printHello() {
-        System.out.println("Hello from PinterestController");
-        return "Hello from PinterestController";
     }
 
 }

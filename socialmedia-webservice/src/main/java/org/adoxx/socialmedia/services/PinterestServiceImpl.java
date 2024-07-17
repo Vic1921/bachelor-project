@@ -45,7 +45,6 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
                 });
     }
 
-    // FIXME: The deleteBoard method should return a 204 Response
     @Override
     public Mono<String> deleteBoard(String boardId) {
         return webClient.delete()
