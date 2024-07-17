@@ -18,6 +18,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(BoardNotFoundException.class)
+    public ResponseEntity<String> handlePinterestBoardNotFoundException(BoardNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(PinNotFoundException.class)
     public ResponseEntity<String> handlePinterestPinNotFoundException(PinNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
@@ -26,6 +31,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PinException.class)
     public ResponseEntity<String> handlePinterestPinException(PinException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CommentException.class)
+    public ResponseEntity<String> handlePinterestCommentException(CommentException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<String> handleInvalidRequestException(InvalidRequestException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

@@ -3,6 +3,7 @@ package org.adoxx.socialmedia.services;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.adoxx.socialmedia.exceptions.BoardException;
+import org.adoxx.socialmedia.exceptions.CommentException;
 import org.adoxx.socialmedia.exceptions.PinException;
 import org.adoxx.socialmedia.exceptions.PinNotFoundException;
 import org.adoxx.socialmedia.models.Comment;
@@ -169,6 +170,11 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
         pinterestScraperService.login(); // Step 1: Login
 
         List<String> rawComments = pinterestScraperService.fetchComments(pinId); // Step 2: Fetch comments
+
+        if (rawComments.isEmpty()) {
+            log.warn("No comments found for pin with id: {}", pinId);
+            throw new CommentException("No comments found for pin with id: " + pinId);
+        }
 
         // TODO: Add persistence logic here thru CommentRepository
         // commentRepository.saveAll(comments);
