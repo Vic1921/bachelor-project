@@ -8,7 +8,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
 import java.time.Duration;
@@ -73,6 +72,8 @@ public class PinterestScraperService {
         }
     }
 
+
+    // FIXME: Introduce a check to ensure the comments dropdown section is snot already expanded
     public List<String> fetchComments(String pinId) {
         // Ensure the user is logged in before fetching comments
         login();

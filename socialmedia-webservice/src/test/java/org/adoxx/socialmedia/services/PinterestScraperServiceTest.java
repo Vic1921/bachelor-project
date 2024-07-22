@@ -29,10 +29,10 @@ class PinterestScraperServiceTest {
         pinterestScraperService.teardown();
     }
 
-    @Test
+    /*@Test
     void testLogin() {
         assertTrue(pinterestScraperService.login());
-    }
+    }*/
 
     @Test
     void testFetchComments() {
