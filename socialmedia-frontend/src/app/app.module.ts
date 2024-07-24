@@ -1,22 +1,24 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module'; // Ensure this is correctly imported
-import { RouterModule } from '@angular/router';
-import {AppComponent} from "./app.component";
-import {SentimentAnalysisComponent} from "./components/sentiment-analysis/sentiment-analysis.component";
-import {PinListComponent} from "./components/pin-list/pin-list.component";
+import { AppComponent } from "./app.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { SentimentAnalysisComponent } from "./components/sentiment-analysis/sentiment-analysis.component";
+import { PinListComponent } from "./components/pin-list/pin-list.component";
+import { HomePageComponent } from "./components/home-page/home-page.component";
+
 @NgModule({
   declarations: [
-    PinListComponent
+    PinListComponent,
+
   ],
   imports: [
+    AppComponent,
     BrowserModule,
-    AppRoutingModule,
-    RouterModule, // Add RouterModule to the imports array
-    AppComponent, // Import AppComponent here
-    SentimentAnalysisComponent,
+    BrowserAnimationsModule,
+    HomePageComponent,
+    SentimentAnalysisComponent
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: []
 })
 export class AppModule { }

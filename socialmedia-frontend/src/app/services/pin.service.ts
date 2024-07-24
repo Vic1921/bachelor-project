@@ -6,11 +6,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PinService {
-  private apiUrl = 'http://localhost:8081/api/pinterest'; 
+  private apiUrl = 'http://localhost:8081/api/pinterest';
 
   constructor(private http: HttpClient) { }
 
-  // TODO: Implement endpoints
   getPins(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/pins`);
   }

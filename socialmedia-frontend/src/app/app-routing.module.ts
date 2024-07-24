@@ -6,7 +6,6 @@ import { SentimentAnalysisComponent } from './components/sentiment-analysis/sent
 import { ModelFeedbackComponent } from './components/model-feedback/model-feedback.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/pins', pathMatch: 'full' },
   { path: 'pins', component: PinListComponent },
   { path: 'pins/:id', component: PinDetailComponent },
   { path: 'analysis', component: SentimentAnalysisComponent },
@@ -14,7 +13,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
