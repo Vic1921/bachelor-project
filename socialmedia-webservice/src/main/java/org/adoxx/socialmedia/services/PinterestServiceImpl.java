@@ -3,6 +3,7 @@ package org.adoxx.socialmedia.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.adoxx.socialmedia.exceptions.BoardException;
 import org.adoxx.socialmedia.exceptions.CommentException;
@@ -86,14 +87,21 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
                 .bodyToMono(String.class)
                 .map(response -> {
                     try {
-                        return objectMapper.readValue(response, new TypeReference<List<BoardDto>>() {
-                        });
+                        PinterestResponse pinterestResponse = objectMapper.readValue(response, PinterestResponse.class);
+                        return pinterestResponse.getItems();
                     } catch (Exception e) {
                         log.error("Failed to parse Board response: {}", e.getMessage());
                         throw new BoardException("Failed to parse Board response");
                     }
                 });
     }
+
+    @Getter
+    @Setter
+    private static class PinterestResponse {
+        private List<BoardDto> items;
+    }
+
 
 
     // ---- CRUD IPinService methods ----

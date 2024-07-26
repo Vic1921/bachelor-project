@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {BoardDto} from "../../models/board-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +11,16 @@ export class BoardService {
 
   constructor(private http: HttpClient) { }
 
-  getBoards(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/boards`);
+  getBoards(): Observable<BoardDto[]> {
+    return this.http.get<BoardDto[]>(`${this.baseUrl}/boards`);
   }
 
   createBoard(board: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/board`, board);
   }
 
-  getBoard(boardId: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/board/${boardId}`);
+  getBoard(boardId: string): Observable<BoardDto> {
+    return this.http.get<BoardDto>(`${this.baseUrl}/board/${boardId}`);
   }
 
   deleteBoard(boardId: string): Observable<any> {
