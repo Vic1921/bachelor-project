@@ -1,5 +1,7 @@
 package org.adoxx.socialmedia.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.adoxx.socialmedia.exceptions.BoardException;
@@ -7,6 +9,7 @@ import org.adoxx.socialmedia.exceptions.CommentException;
 import org.adoxx.socialmedia.exceptions.PinException;
 import org.adoxx.socialmedia.exceptions.PinNotFoundException;
 import org.adoxx.socialmedia.models.Comment;
+import org.adoxx.socialmedia.models.responses.BoardDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -23,12 +26,15 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
 
     private final WebClient webClient;
     private final PinterestScraperService pinterestScraperService;
+    private final ObjectMapper objectMapper;
+
 
     // CTOR
     @Autowired
-    public PinterestServiceImpl(WebClient webClient) {
+    public PinterestServiceImpl(WebClient webClient, ObjectMapper objectMapper) {
         this.webClient = webClient;
         this.pinterestScraperService = new PinterestScraperService();
+        this.objectMapper = objectMapper;
     }
 
 
@@ -58,24 +64,34 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
     }
 
     @Override
-    public Mono<String> getBoard(String boardId) {
+    public Mono<BoardDto> getBoard(String boardId) {
         return webClient.get()
                 .uri("/boards/" + boardId)
                 .retrieve()
                 .bodyToMono(String.class)
-                .doOnError(error -> {
-                    throw new BoardException("Failed to get board with id: " + boardId + " with error msg: " + error.getMessage());
+                .map(response -> {
+                    try {
+                        return objectMapper.readValue(response, BoardDto.class);
+                    } catch (Exception e) {
+                        log.error("Failed to parse Board response: {}", e.getMessage());
+                        throw new BoardException("Failed to parse Board response");
+                    }
                 });
     }
 
     @Override
-    public Mono<String> getBoards() {
-        return webClient.get()
-                .uri("/boards")
+    public Mono<List<BoardDto>> getBoards() {
+        return webClient.get().uri("/boards")
                 .retrieve()
                 .bodyToMono(String.class)
-                .doOnError(error -> {
-                    throw new BoardException("Failed to get boards: " + error.getMessage());
+                .map(response -> {
+                    try {
+                        return objectMapper.readValue(response, new TypeReference<List<BoardDto>>() {
+                        });
+                    } catch (Exception e) {
+                        log.error("Failed to parse Board response: {}", e.getMessage());
+                        throw new BoardException("Failed to parse Board response");
+                    }
                 });
     }
 

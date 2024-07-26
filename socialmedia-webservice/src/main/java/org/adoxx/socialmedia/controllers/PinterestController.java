@@ -7,12 +7,15 @@ import org.adoxx.socialmedia.exceptions.PinNotFoundException;
 import org.adoxx.socialmedia.models.requests.CreateBoardRequest;
 import org.adoxx.socialmedia.models.requests.PinRequest;
 import org.adoxx.socialmedia.models.requests.PinRequestBase64;
+import org.adoxx.socialmedia.models.responses.BoardDto;
 import org.adoxx.socialmedia.services.IPinService;
 import org.adoxx.socialmedia.services.IBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/pinterest")
@@ -38,15 +41,16 @@ public class PinterestController {
     }
 
     @GetMapping("/board/{boardId}")
-    public Mono<ResponseEntity<String>> getBoard(@PathVariable String boardId) {
+    public Mono<ResponseEntity<BoardDto>> getBoard(@PathVariable String boardId) {
         return pinterestService.getBoard(boardId)
                 .switchIfEmpty(Mono.error(new BoardNotFoundException("Board not found with id: " + boardId)))
                 .map(ResponseEntity::ok);
     }
 
     @GetMapping("/boards")
-    public Mono<ResponseEntity<String>> getBoards() {
+    public Mono<ResponseEntity<List<BoardDto>>> getBoards() {
         return pinterestService.getBoards()
+                .switchIfEmpty(Mono.error(new BoardNotFoundException("No boards found")))
                 .map(ResponseEntity::ok);
     }
 
