@@ -57,7 +57,6 @@ public class PinterestController {
     @DeleteMapping("/board/{boardId}")
     public Mono<ResponseEntity<String>> deleteBoard(@PathVariable String boardId) {
         return pinterestService.deleteBoard(boardId)
-                .switchIfEmpty(Mono.error(new BoardNotFoundException("Board not found with id: " + boardId)))
                 .map(ResponseEntity::ok);
     }
 
