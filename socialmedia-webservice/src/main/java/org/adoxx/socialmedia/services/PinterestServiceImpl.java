@@ -1,6 +1,5 @@
 package org.adoxx.socialmedia.services;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +10,7 @@ import org.adoxx.socialmedia.exceptions.PinException;
 import org.adoxx.socialmedia.exceptions.PinNotFoundException;
 import org.adoxx.socialmedia.models.Comment;
 import org.adoxx.socialmedia.models.responses.BoardDto;
+import org.adoxx.socialmedia.models.responses.PinDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -87,8 +87,8 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
                 .bodyToMono(String.class)
                 .map(response -> {
                     try {
-                        PinterestResponse pinterestResponse = objectMapper.readValue(response, PinterestResponse.class);
-                        return pinterestResponse.getItems();
+                        BoardItemsResponse boardItemsResponse = objectMapper.readValue(response, BoardItemsResponse.class);
+                        return boardItemsResponse.getItems();
                     } catch (Exception e) {
                         log.error("Failed to parse Board response: {}", e.getMessage());
                         throw new BoardException("Failed to parse Board response");
@@ -98,36 +98,54 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
 
     @Getter
     @Setter
-    private static class PinterestResponse {
+    private static class BoardItemsResponse {
         private List<BoardDto> items;
     }
 
 
+    @Getter
+    @Setter
+    private static class PinItemsResponse {
+        private List<PinDTO> items;
+    }
 
     // ---- CRUD IPinService methods ----
 
 
     @Override
-    public Mono<String> getPin(String pinId) {
+    public Mono<PinDTO> getPin(String pinId) {
         return webClient.get()
                 .uri("/pins/" + pinId)
                 .retrieve()
                 .bodyToMono(String.class)
-                .doOnError(error -> {
-                    throw new PinNotFoundException("Failed to get pin with id: " + pinId + " with error msg: " + error.getMessage());
+                .map(response -> {
+                    try {
+                        return objectMapper.readValue(response, PinDTO.class);
+                    } catch (Exception e) {
+                        log.error("Failed to parse Pin response: {}", e.getMessage());
+                        throw new PinNotFoundException("Failed to get pin with id: " + pinId + " with error msg: " + e.getMessage());
+                    }
                 });
     }
 
+
     @Override
-    public Mono<String> getPins() {
+    public Mono<List<PinDTO>> getPins() {
         return webClient.get()
                 .uri("/pins")
                 .retrieve()
                 .bodyToMono(String.class)
-                .doOnError(error -> {
-                    throw new PinNotFoundException("Failed to get pins: " + error.getMessage());
+                .map(response -> {
+                    try {
+                        PinItemsResponse pinItemsResponse = objectMapper.readValue(response, PinItemsResponse.class);
+                        return pinItemsResponse.getItems();
+                    } catch (Exception e) {
+                        log.error("Failed to parse Pins response: {}", e.getMessage());
+                        throw new PinNotFoundException("Failed to get pins: " + e.getMessage());
+                    }
                 });
     }
+
 
     @Override
     public Mono<String> deletePin(String pinId) {

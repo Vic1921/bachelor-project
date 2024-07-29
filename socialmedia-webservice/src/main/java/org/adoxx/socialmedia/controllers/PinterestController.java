@@ -8,6 +8,7 @@ import org.adoxx.socialmedia.models.requests.CreateBoardRequest;
 import org.adoxx.socialmedia.models.requests.PinRequest;
 import org.adoxx.socialmedia.models.requests.PinRequestBase64;
 import org.adoxx.socialmedia.models.responses.BoardDto;
+import org.adoxx.socialmedia.models.responses.PinDTO;
 import org.adoxx.socialmedia.services.IPinService;
 import org.adoxx.socialmedia.services.IBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,14 +66,14 @@ public class PinterestController {
 
 
     @GetMapping("/pin/{pinId}")
-    public Mono<ResponseEntity<String>> getPin(@PathVariable String pinId) {
+    public Mono<ResponseEntity<PinDTO>> getPin(@PathVariable String pinId) {
         return pinService.getPin(pinId)
                 .switchIfEmpty(Mono.error(new PinNotFoundException("Pin not found with id: " + pinId)))
                 .map(ResponseEntity::ok);
     }
 
     @GetMapping("/pins")
-    public Mono<ResponseEntity<String>> getPins() {
+    public Mono<ResponseEntity<List<PinDTO>>> getPins() {
         return pinService.getPins()
                 .map(ResponseEntity::ok);
     }
@@ -80,7 +81,6 @@ public class PinterestController {
     @DeleteMapping("/pin/{pinId}")
     public Mono<ResponseEntity<String>> deletePin(@PathVariable String pinId) {
         return pinService.deletePin(pinId)
-                .switchIfEmpty(Mono.error(new PinNotFoundException("Pin not found with id: " + pinId)))
                 .map(ResponseEntity::ok);
     }
 

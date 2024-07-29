@@ -1,14 +1,15 @@
 package org.adoxx.socialmedia.services;
 
 import org.adoxx.socialmedia.models.Comment;
+import org.adoxx.socialmedia.models.responses.PinDTO;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface IPinService {
-    Mono<String> getPin(String pinId);
+    Mono<PinDTO> getPin(String pinId);
 
-    Mono<String> getPins();
+    Mono<List<PinDTO>> getPins();
 
     Mono<String> deletePin(String pinId);
 
