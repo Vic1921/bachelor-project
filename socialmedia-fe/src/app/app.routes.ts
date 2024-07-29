@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { HomeComponent} from "./components/home/home.component";
-import {PinsComponent} from "./components/pins/pins.component";
-import {BoardsComponent} from "./components/boards/boards.component";
-import {BoardDetailComponent} from "./components/board-detail/board-detail.component";
+import { HomeComponent } from "./components/home/home.component";
+import { PinsComponent } from "./components/pins/pins.component";
+import { BoardsComponent } from "./components/boards/boards.component";
+import { BoardDetailComponent } from "./components/board-detail/board-detail.component";
 
 export const routes: Routes = [
   {
@@ -21,7 +21,7 @@ export const routes: Routes = [
     title: 'Boards Overview'
   },
   {
-    path: 'boards/:boardId',
+    path: 'board/:boardId',
     component: BoardDetailComponent,
     title: 'Board Detail'
   }

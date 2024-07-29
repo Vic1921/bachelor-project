@@ -5,4 +5,5 @@ export interface BoardDto {
   collaboratorCount: number;
   followerCount: number;
   createdAt: string;
+  thumbnailUrl: string;
 }

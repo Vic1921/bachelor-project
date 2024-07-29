@@ -13,5 +13,6 @@ public class BoardDto {
     private int collaboratorCount;
     private int followerCount;
     private String createdAt;
+    private String thumbnailUrl;
 
 }
