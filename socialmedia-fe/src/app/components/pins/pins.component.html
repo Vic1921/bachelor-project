@@ -4,10 +4,10 @@
     <li *ngFor="let pin of pins$ | async">
       <h3>{{ pin.title }}</h3>
       <p>{{ pin.description }}</p>
-      <div *ngIf="pin.images">
-        <img *ngFor="let img of pin.images | keyvalue" [src]="img.value.url" [width]="img.value.width" [height]="img.value.height">
+      <div *ngIf="pin.media">
+        <img *ngFor="let img of pin.media.images | keyvalue" [src]="img.value.url" [width]="img.value.width" [height]="img.value.height">
       </div>
-      <p><a [href]="pin.link" target="_blank">View on Pinterest</a></p>
+      <p><a [routerLink]="['/pin', pin.id]">View Details</a></p>
     </li>
   </ul>
 </div>

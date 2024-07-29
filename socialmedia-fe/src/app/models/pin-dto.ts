@@ -4,6 +4,11 @@ export interface ImageDetails {
   url: string;
 }
 
+export interface MediaDetails {
+  images: { [key: string]: ImageDetails };
+  type: string;
+}
+
 export interface PinDTO {
   id: string;
   createdAt: string;
@@ -13,7 +18,7 @@ export interface PinDTO {
   boardId: string;
   boardSectionId: string;
   boardOwnerUsername: string;
-  images: { [key: string]: ImageDetails };
+  media: MediaDetails;
   note: string;
   pinMetrics90d: { [key: string]: number };
   pinMetricsAllTime: { [key: string]: number };

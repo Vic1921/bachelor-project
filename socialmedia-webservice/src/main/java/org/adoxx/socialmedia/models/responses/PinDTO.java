@@ -18,7 +18,7 @@ public class PinDTO {
     private String boardId;
     private String boardSectionId;
     private String boardOwnerUsername;
-    private Map<String, ImageDetails> images;
+    private MediaDetails media;
     private String note;
     private Map<String, Integer> pinMetrics90d;
     private Map<String, Integer> pinMetricsAllTime;
@@ -33,5 +33,14 @@ public class PinDTO {
         private int height;
         private String url;
 
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MediaDetails {
+        private Map<String, ImageDetails> images;
+        private String media_type;
     }
 }

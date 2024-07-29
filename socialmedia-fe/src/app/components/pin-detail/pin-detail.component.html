@@ -1,0 +1,8 @@
+<div *ngIf="pin">
+  <h2>{{ pin.title }}</h2>
+  <p>{{ pin.description }}</p>
+  <div *ngIf="pin.media">
+    <img *ngFor="let img of pin.media.images | keyvalue" [src]="img.value.url" [width]="img.value.width" [height]="img.value.height">
+  </div>
+  <p><a [href]="pin.link" target="_blank">View on Pinterest</a></p>
+</div>
