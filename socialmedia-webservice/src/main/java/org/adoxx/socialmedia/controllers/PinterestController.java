@@ -71,7 +71,7 @@ public class PinterestController {
                 .map(ResponseEntity::ok);
     }
 
-    @GetMapping("/getPins")
+    @GetMapping("/pins")
     public Mono<ResponseEntity<String>> getPins() {
         return pinService.getPins()
                 .map(ResponseEntity::ok);
