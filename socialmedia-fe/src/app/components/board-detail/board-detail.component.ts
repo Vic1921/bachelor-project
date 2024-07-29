@@ -29,5 +29,4 @@ export class BoardDetailComponent implements OnInit {
     });
   }
 
-
 }

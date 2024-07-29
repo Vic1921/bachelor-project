@@ -15,7 +15,7 @@ export class BoardService {
     return this.http.get<BoardDto[]>(`${this.baseUrl}/boards`);
   }
 
-  createBoard(board: any): Observable<any> {
+  createBoard(board: { name: string, description: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/board`, board);
   }
 

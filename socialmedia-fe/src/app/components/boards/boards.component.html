@@ -5,4 +5,10 @@
       <a [routerLink]="['/board', board.id]">{{ board.name }}</a>
     </li>
   </ul>
+  <div>
+    <h3>Create New Board</h3>
+    <input type="text" placeholder="Name" [(ngModel)]="newBoardName">
+    <input type="text" placeholder="Description" [(ngModel)]="newBoardDescription">
+    <button (click)="createBoard()">Create</button>
+  </div>
 </div>
