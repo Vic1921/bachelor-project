@@ -72,8 +72,6 @@ public class PinterestScraperService {
         }
     }
 
-
-    // FIXME: Introduce a check to ensure the comments dropdown section is snot already expanded
     public List<String> fetchComments(String pinId) {
         // Ensure the user is logged in before fetching comments
         login();
@@ -83,23 +81,25 @@ public class PinterestScraperService {
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(12));
 
-            // Scroll a little to ensure the comments section can load -> add more if multiple comments are expected; Might need to adjust dynamically to scroll through the whole comment section
+            // Scroll a little to ensure the comments section can load
             ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,250)", "");
 
             // Wait a bit to give the page time to load comments
             TimeUnit.SECONDS.sleep(5);
 
-            // Try clicking on the "Comments" section or its container to reveal the comments or alternatively use the xpath below
-            WebElement commentsSection = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//h2[contains(text(), 'Comments')]/..")));
-            // WebElement commentsSection = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]/div/div[2]/div[2]/div[5]/div/div[2]/div/div/div[1]/div/div")));
-            commentsSection.click();
+            // Check if comments are already visible
+            List<WebElement> visibleComments = driver.findElements(By.className("xuA"));
+            if (visibleComments.isEmpty()) {
+                // Try clicking on the "Comments" section or its container to reveal the comments
+                WebElement commentsSection = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//h2[contains(text(), 'Comments')]/..")));
+                commentsSection.click();
 
-            // Wait for comments to be visible
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("xuA")));
+                // Wait for comments to be visible
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("xuA")));
+            }
 
             // Fetch all comments
             List<WebElement> commentElements = driver.findElements(By.className("text-container"));
-
 
             return commentElements.stream()
                     .map(WebElement::getText)
