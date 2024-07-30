@@ -32,9 +32,9 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
 
     // CTOR
     @Autowired
-    public PinterestServiceImpl(WebClient webClient, ObjectMapper objectMapper) {
+    public PinterestServiceImpl(WebClient webClient, ObjectMapper objectMapper, PinterestScraperService pinterestScraperService) {
         this.webClient = webClient;
-        this.pinterestScraperService = new PinterestScraperService();
+        this.pinterestScraperService = pinterestScraperService;
         this.objectMapper = objectMapper;
     }
 
@@ -209,8 +209,7 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
 
 
     public List<Comment> getPinComments(String pinId) {
-        pinterestScraperService.login(); // Step 1: Login
-
+        // Login already in fetchComments()
         List<String> rawComments = pinterestScraperService.fetchComments(pinId); // Step 2: Fetch comments
 
         if (rawComments.isEmpty()) {

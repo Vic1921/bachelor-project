@@ -3,6 +3,7 @@ package org.adoxx.socialmedia.services;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,12 +31,16 @@ public class PinterestScraperService {
     @Value("${pinterest.password}")
     private String password;
 
-    // lazy initialization of the WebDriver
     private void initializeWebDriver() {
         if (driver == null) {
             System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-            driver = new ChromeDriver();
-            driver.manage().window().setSize(new Dimension(1300, 768));
+
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless");
+            options.addArguments("--disable-gpu");
+            options.addArguments("--window-size=1300,760");
+
+            driver = new ChromeDriver(options);
         }
     }
 
@@ -58,7 +63,6 @@ public class PinterestScraperService {
             WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));
             WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password")));
             WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@type='submit']")));
-
             emailField.sendKeys(email);
             passwordField.sendKeys(password);
             loginButton.click();
