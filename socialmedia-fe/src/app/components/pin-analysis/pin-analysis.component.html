@@ -11,3 +11,7 @@
     <app-metrics-table [data]="pin.pinMetricsAllTime"></app-metrics-table>
   </div>
 </div>-->
+<div *ngIf="pinId">
+  <app-pie-chart></app-pie-chart>
+  <app-category-table></app-category-table>
+</div>
