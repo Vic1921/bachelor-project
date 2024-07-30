@@ -5,9 +5,9 @@
       <h3>{{ pin.title }}</h3>
       <p>{{ pin.description }}</p>
       <div *ngIf="pin.media">
-        <img *ngFor="let img of pin.media.images | keyvalue" [src]="img.value.url" [width]="img.value.width" [height]="img.value.height">
+        <img [src]="pin.media.images['400x300'].url" [width]="pin.media.images['400x300'].width" [height]="pin.media.images['400x300'].height">
       </div>
-      <p><a [routerLink]="['/pin', pin.id]">View Details</a></p>
+      <p><a [routerLink]="['/pin', pin.id]">View Pin Details</a></p>
     </li>
   </ul>
 </div>

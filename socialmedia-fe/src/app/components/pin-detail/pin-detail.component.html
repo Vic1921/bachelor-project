@@ -1,8 +1,9 @@
+<!-- Update `pin-detail.component.html` to use the 600x image size for the detailed pin display -->
 <div *ngIf="pin">
   <h2>{{ pin.title }}</h2>
   <p>{{ pin.description }}</p>
   <div *ngIf="pin.media">
-    <img *ngFor="let img of pin.media.images | keyvalue" [src]="img.value.url" [width]="img.value.width" [height]="img.value.height">
+    <img [src]="pin.media.images['600x'].url" [width]="pin.media.images['600x'].width" [height]="pin.media.images['600x'].height">
   </div>
-  <p><a [href]="pin.link" target="_blank">View on Pinterest</a></p>
+  <p><a [routerLink]="['/pin-analysis', pin.id]">Perform Analysis</a></p>
 </div>
