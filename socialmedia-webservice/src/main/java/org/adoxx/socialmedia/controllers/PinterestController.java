@@ -1,6 +1,5 @@
 package org.adoxx.socialmedia.controllers;
 
-import org.adoxx.socialmedia.exceptions.BoardException;
 import org.adoxx.socialmedia.exceptions.BoardNotFoundException;
 import org.adoxx.socialmedia.exceptions.InvalidRequestException;
 import org.adoxx.socialmedia.exceptions.PinNotFoundException;
