@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {ModelFeedbackOverview} from "../../models/model-feedback-overview";
+import {SentimentResult} from "../../models/sentiment-result";
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,15 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  getSentimentSummary(pinId: string | null): Observable<{ [p: string]: number }> {
-    return this.http.get<{[key: string]: number}>(`${this.baseUrl}/sentiment-summary/${pinId}`);
+  getSentimentAnalysis(pinId: string): Observable<SentimentResult[]> {
+    return this.http.get<SentimentResult[]>(`${this.baseUrl}/${pinId}`);
   }
 
-  getCategoryOverview(pinId: string | null): Observable<ModelFeedbackOverview> {
-    return this.http.get<ModelFeedbackOverview>(`${this.baseUrl}/categorized/${pinId}`);
+  getCategoryOverview(pinId: string, sentimentResults: SentimentResult[]): Observable<ModelFeedbackOverview> {
+    return this.http.post<ModelFeedbackOverview>(`${this.baseUrl}/categorized/${pinId}`, sentimentResults);
+  }
+
+  getSentimentSummary(pinId: string, sentimentResults: SentimentResult[]): Observable<{ [key: string]: number }> {
+    return this.http.post<{ [key: string]: number }>(`${this.baseUrl}/sentiment-summary/${pinId}`, sentimentResults);
   }
 }

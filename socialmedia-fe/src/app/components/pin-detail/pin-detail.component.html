@@ -5,5 +5,5 @@
   <div *ngIf="pin.media">
     <img [src]="pin.media.images['600x'].url" [width]="pin.media.images['600x'].width" [height]="pin.media.images['600x'].height">
   </div>
-  <p><a [routerLink]="['/pin-analysis', pin.id]">Perform Analysis</a></p>
+  <button (click)="performAnalysis()">Perform Analysis</button>
 </div>

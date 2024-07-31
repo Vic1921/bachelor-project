@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../services/data/data.service';
+import {Component, Input, OnInit} from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
-import {ActivatedRoute, RouterLink, RouterOutlet} from "@angular/router";
+import {RouterLink, RouterOutlet} from "@angular/router";
 import {CommonModule} from "@angular/common";
 
 @Component({
@@ -13,6 +12,8 @@ import {CommonModule} from "@angular/common";
   styleUrls: ['./pie-chart.component.css']
 })
 export class PieChartComponent implements OnInit {
+  @Input() data: { [key: string]: number } = { positive: 0, negative: 0, neutral: 0 };
+
   public pieChartLabels: string[] = ['Positive', 'Negative', 'Neutral'];
   public pieChartData: ChartConfiguration<'pie'>['data']['datasets'] = [{
     data: [],
@@ -20,14 +21,7 @@ export class PieChartComponent implements OnInit {
   }];
   public pieChartType: ChartType = 'pie';
 
-  constructor(
-    private route: ActivatedRoute,
-    private dataService: DataService) { }
-
   ngOnInit(): void {
-    const pinId = this.route.snapshot.paramMap.get('pinId');
-    this.dataService.getSentimentSummary(pinId).subscribe(summary => {
-      this.pieChartData[0].data = [summary['positive'], summary['negative'], summary['neutral']];
-    });
+    this.pieChartData[0].data = [this.data['positive'], this.data['negative'], this.data['neutral']];
   }
 }

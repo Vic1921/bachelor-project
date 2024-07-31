@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { PinService } from '../../services/pin/pin.service';
-import { PinDTO } from '../../models/pin-dto';
 import {PieChartComponent} from "../pie-chart/pie-chart.component";
 import {CategoryTableComponent} from "../category-table/category-table.component";
+import {DataService} from "../../services/data/data.service";
+import {ModelFeedbackOverview} from "../../models/model-feedback-overview";
+import {SentimentResult} from "../../models/sentiment-result";
 
 @Component({
   selector: 'app-pin-analysis',
@@ -14,16 +15,27 @@ import {CategoryTableComponent} from "../category-table/category-table.component
   styleUrls: ['./pin-analysis.component.css']
 })
 export class PinAnalysisComponent implements OnInit {
-  pin: PinDTO | undefined;
-  pinId: string | null = null;
+  sentimentResults: SentimentResult[] = [];
+  sentimentSummary: { [key: string]: number } = { positive: 0, negative: 0, neutral: 0 };
+  feedbackOverview: ModelFeedbackOverview = { topConcerns: '', favoriteAspects: '', mostRequestedFeatures: '' };
 
   constructor(
     private route: ActivatedRoute,
-    private pinService: PinService
+    private dataService: DataService
   ) { }
 
   ngOnInit(): void {
-    this.pinId = this.route.snapshot.paramMap.get('pinId');
-    this.pinService.getPin(<string>this.pinId).subscribe(data => this.pin = data);
+    const pinId = this.route.snapshot.paramMap.get('pinId');
+    if (pinId) {
+      this.dataService.getSentimentAnalysis(pinId).subscribe(sentimentResults => {
+        this.sentimentResults = sentimentResults;
+        this.dataService.getSentimentSummary(pinId, sentimentResults).subscribe(summary => {
+          this.sentimentSummary = summary;
+        });
+        this.dataService.getCategoryOverview(pinId, sentimentResults).subscribe(overview => {
+          this.feedbackOverview = overview;
+        });
+      });
+    }
   }
 }

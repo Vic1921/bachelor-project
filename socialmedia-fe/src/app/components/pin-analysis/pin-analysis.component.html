@@ -1,17 +1,11 @@
-<h2>Analysis Works!</h2>
-<!--
-<div *ngIf="pin">
-  <h2>Analysis for {{ pin.title }}</h2>
-  <div>
-    &lt;!&ndash; Pie chart component placeholder &ndash;&gt;
-    <app-pie-chart [data]="pin.pinMetricsAllTime"></app-pie-chart>
+<div *ngIf="sentimentResults.length > 0">
+  <h1>Analysis Dashboard</h1>
+  <div style="display: flex;">
+    <div style="flex: 1;">
+      <app-pie-chart [data]="sentimentSummary"></app-pie-chart>
+    </div>
+    <div style="flex: 1;">
+      <app-category-table [data]="feedbackOverview"></app-category-table>
+    </div>
   </div>
-  <div>
-    &lt;!&ndash; Table component placeholder &ndash;&gt;
-    <app-metrics-table [data]="pin.pinMetricsAllTime"></app-metrics-table>
-  </div>
-</div>-->
-<div *ngIf="pinId">
-  <app-pie-chart></app-pie-chart>
-  <app-category-table></app-category-table>
 </div>

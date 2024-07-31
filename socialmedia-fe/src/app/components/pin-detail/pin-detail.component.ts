@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
+import {ActivatedRoute, Router, RouterLink, RouterOutlet} from '@angular/router';
 import { PinService } from '../../services/pin/pin.service';
 import { CommonModule } from '@angular/common';
 import {PinDTO} from "../../models/pin-dto";
@@ -16,11 +16,17 @@ export class PinDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private pinService: PinService
+    private pinService: PinService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     const pinId = this.route.snapshot.paramMap.get('pinId');
     this.pinService.getPin(<string>pinId).subscribe(data => this.pin = data);
+  }
+
+  performAnalysis(): void {
+    const pinId = this.route.snapshot.paramMap.get('pinId');
+    this.router.navigate(['/pin-analysis', pinId]);
   }
 }
