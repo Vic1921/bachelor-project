@@ -1,7 +1,10 @@
-<div style="display: block;">
+
   <canvas baseChart
-          [data]="pieChartData"
-          [type]="pieChartType">
+          [type]="'pie'"
+          [datasets]="pieChartDatasets"
+          [labels]="pieChartLabels"
+          [options]="pieChartOptions"
+          [plugins]="pieChartPlugins"
+          [legend]="pieChartLegend">
   </canvas>
-</div>
 
