@@ -29,4 +29,14 @@ export class PinDetailComponent implements OnInit {
     const pinId = this.route.snapshot.paramMap.get('pinId');
     this.router.navigate(['/pin-analysis', pinId]);
   }
+
+  deletePin(): void {
+    const pinId = this.route.snapshot.paramMap.get('pinId');
+    if (pinId) {
+      this.pinService.deletePin(pinId).subscribe(() => {
+        this.router.navigate(['/pins']);
+      });
+    }
+  }
+
 }

@@ -1,8 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import { ChartConfiguration, ChartType } from 'chart.js';
-import {BaseChartDirective} from 'ng2-charts';
-import {RouterLink, RouterOutlet} from "@angular/router";
-import {CommonModule} from "@angular/common";
+import { Component, Input, OnInit } from '@angular/core';
+import { ChartConfiguration, ChartType, ChartData } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-pie-chart',
@@ -12,16 +12,23 @@ import {CommonModule} from "@angular/common";
   styleUrls: ['./pie-chart.component.css']
 })
 export class PieChartComponent implements OnInit {
-  @Input() data: { [key: string]: number } = { positive: 0, negative: 0, neutral: 0 };
+  @Input() data: Map<string, number> = new Map();
 
-  public pieChartLabels: string[] = ['Positive', 'Negative', 'Neutral'];
-  public pieChartData: ChartConfiguration<'pie'>['data']['datasets'] = [{
-    data: [],
-    backgroundColor: ['#dc0d0d', '#43c92f', '#3bbfcb']
-  }];
+  public pieChartLabels: string[] = ['POSITIVE', 'NEGATIVE', 'NEUTRAL'];
+  public pieChartData: ChartData<'pie'> = {
+    labels: this.pieChartLabels,
+    datasets: [{
+      data: [],
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+    }]
+  };
   public pieChartType: ChartType = 'pie';
 
   ngOnInit(): void {
-    this.pieChartData[0].data = [this.data['positive'], this.data['negative'], this.data['neutral']];
+    this.pieChartData.datasets[0].data = [
+      this.data.get('POSITIVE') || 0,
+      this.data.get('NEGATIVE') || 0,
+      this.data.get('NEUTRAL') || 0
+    ];
   }
 }

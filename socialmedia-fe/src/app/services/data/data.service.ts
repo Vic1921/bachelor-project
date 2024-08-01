@@ -21,7 +21,9 @@ export class DataService {
     return this.http.post<ModelFeedbackOverview>(`${this.baseUrl}/categorized/${pinId}`, sentimentResults);
   }
 
-  getSentimentSummary(pinId: string, sentimentResults: SentimentResult[]): Observable<{ [key: string]: number }> {
-    return this.http.post<{ [key: string]: number }>(`${this.baseUrl}/sentiment-summary/${pinId}`, sentimentResults);
+  getSentimentSummary(pinId: string, sentimentResults: SentimentResult[]): Observable<Map<string, number>> {
+    return this.http.post<Map<string, number>>(`${this.baseUrl}/sentiment-summary/${pinId}`, sentimentResults);
   }
+
+
 }

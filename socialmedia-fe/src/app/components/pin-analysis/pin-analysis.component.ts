@@ -16,7 +16,8 @@ import {SentimentResult} from "../../models/sentiment-result";
 })
 export class PinAnalysisComponent implements OnInit {
   sentimentResults: SentimentResult[] = [];
-  sentimentSummary: { [key: string]: number } = { positive: 0, negative: 0, neutral: 0 };
+  sentimentSummary: Map<string, number> = new Map();
+  /*sentimentSummary: { [key: string]: number } = { POSITIVE: 0, NEGATIVE: 0, NEUTRAL: 0 };*/
   feedbackOverview: ModelFeedbackOverview = { topConcerns: '', favoriteAspects: '', mostRequestedFeatures: '' };
 
   constructor(
