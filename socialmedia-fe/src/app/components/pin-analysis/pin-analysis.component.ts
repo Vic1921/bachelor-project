@@ -27,17 +27,17 @@ export class PinAnalysisComponent implements OnInit {
   ngOnInit(): void {
     const pinId = this.route.snapshot.paramMap.get('pinId');
     if (pinId) {
-      /*this.dataService.getSentimentAnalysis(pinId).subscribe(sentimentResults => {
-        this.sentimentResults = sentimentResults; });*/
-
-        this.dataService.getSentimentSummary(pinId, []).subscribe(summary => {
+      this.dataService.getSentimentAnalysis(pinId).subscribe(sentimentResults => {
+        this.sentimentResults = sentimentResults;
+        this.dataService.getSentimentSummary(pinId, sentimentResults).subscribe(summary => {
           this.sentimentSummary = summary;
           console.log(this.sentimentSummary);
         });
-        this.dataService.getCategoryOverview(pinId, []).subscribe(overview => {
+        this.dataService.getCategoryOverview(pinId, sentimentResults).subscribe(overview => {
           this.feedbackOverview = overview;
           console.log(this.feedbackOverview);
         });
+      });
       }
     }
 
