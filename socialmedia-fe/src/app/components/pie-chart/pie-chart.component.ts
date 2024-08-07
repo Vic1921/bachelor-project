@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import {ChartConfiguration, ChartType, ChartData, ChartOptions} from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChartType, ChartOptions} from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 
 import { RouterLink, RouterOutlet } from '@angular/router';
@@ -13,34 +12,40 @@ import { CommonModule } from '@angular/common';
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent implements OnInit {
-  @Input() data: Map<string, number> = new Map();
+export class PieChartComponent implements OnChanges {
+  @Input() chartData: Map<string, number> = new Map();
 
-  //public pieChartLabels: string[] = ['Example 1', 'Example 2', 'Example 3'];
-  //public pieChartLabels: string[] = ['POSITIVE', 'NEGATIVE', 'NEUTRAL'];
-/*  public pieChartData: ChartData<'pie'> = {
-    labels: this.pieChartLabels,
-    datasets: [{
-      data: [30, 50, 20],
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-    }]
-  };*/
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: false,
   };
-  public pieChartLabels = [ [ 'Download', 'Sales' ], [ 'In', 'Store', 'Sales' ], 'Mail Sales' ];
-  public pieChartDatasets = [ {
-    data: [ 300, 500, 100 ]
-  } ];
+  public pieChartLabels: string[] = ['POSITIVE', 'NEGATIVE', 'NEUTRAL'];
+  public pieChartDatasets: { data: number[], backgroundColor: string[] }[] = [{
+    data: [],
+    backgroundColor: ['#4caf50', '#f44336', '#9e9e9e']
+  }];
   public pieChartLegend = true;
   public pieChartPlugins = [];
   public pieChartType: ChartType = 'pie';
 
-  ngOnInit(): void {
-    /*this.pieChartData.datasets[0].data = [
-      this.data.get('POSITIVE') || 0,
-      this.data.get('NEGATIVE') || 0,
-      this.data.get('NEUTRAL') || 0
-    ];*/
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['chartData']) {
+      this.updateChartData();
+    }
   }
+
+  updateChartData(): void {
+    let values: number[] = [];
+    if (this.chartData instanceof Map) {
+      values = Array.from(this.chartData.values()).map(value => value as number);
+    } else if (typeof this.chartData === 'object') {
+      values = Object.values(this.chartData).map(value => value as number);
+      console.log(values);
+    } else {
+      console.error('chartData is not a Map or an object');
+    }
+    this.pieChartDatasets[0].data = values;
+    console.log(this.pieChartDatasets[0].data);
+  }
+
 }
+

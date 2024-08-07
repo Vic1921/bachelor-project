@@ -1,8 +1,8 @@
-<div *ngIf="sentimentResults.length > 0">
+<div *ngIf="sentimentSummary && feedbackOverview">
   <h1>Analysis Dashboard</h1>
   <div style="display: flex;">
     <div style="flex: 1;">
-      <app-pie-chart [data]="sentimentSummary"></app-pie-chart>
+      <app-pie-chart [chartData]="sentimentSummary"></app-pie-chart>
     </div>
     <div style="flex: 1;">
       <app-category-table [data]="feedbackOverview"></app-category-table>
