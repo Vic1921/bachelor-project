@@ -37,16 +37,15 @@ public class AnalysisController {
 
     @PostMapping("/categorized/{pinId}")
     public ModelFeedbackOverview getCategories(@PathVariable String pinId, @RequestBody List<SentimentResult> sentimentResultList) {
-        List<Comment> comments = mockDataService.generateMockComments(20);
-        //List<Comment> comments = sentimentResultList.stream().map(SentimentResult::comment).toList();
+        // List<Comment> comments = mockDataService.generateMockComments(20);
+        List<Comment> comments = sentimentResultList.stream().map(SentimentResult::comment).toList();
         return categoryService.categorizeComments(comments);
     }
 
     @PostMapping("/sentiment-summary/{pinId}")
     public Map<String, Integer> getSentimentSummary(@PathVariable String pinId, @RequestBody List<SentimentResult> sentimentResultList) {
-        // Use mock data for testing
-        List<SentimentResult> mockData = mockDataService.generateMockSentimentResults(20);
-        return dataService.prepareDataForDisplay(mockData);
+        // List<SentimentResult> mockData = mockDataService.generateMockSentimentResults(20);
+        return dataService.prepareDataForDisplay(sentimentResultList);
     }
 
 }
