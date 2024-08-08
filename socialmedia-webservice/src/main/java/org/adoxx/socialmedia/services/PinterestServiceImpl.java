@@ -11,6 +11,8 @@ import org.adoxx.socialmedia.exceptions.PinNotFoundException;
 import org.adoxx.socialmedia.models.Comment;
 import org.adoxx.socialmedia.models.responses.BoardDto;
 import org.adoxx.socialmedia.models.responses.PinDTO;
+import org.adoxx.socialmedia.repositories.CommentRepository;
+import org.adoxx.socialmedia.repositories.PinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,14 +30,17 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
     private final WebClient webClient;
     private final PinterestScraperService pinterestScraperService;
     private final ObjectMapper objectMapper;
+    private final PinRepository pinRepository;
+    private final CommentRepository commentRepository;
 
 
-    // CTOR
     @Autowired
-    public PinterestServiceImpl(WebClient webClient, ObjectMapper objectMapper, PinterestScraperService pinterestScraperService) {
+    public PinterestServiceImpl(WebClient webClient, ObjectMapper objectMapper, PinterestScraperService pinterestScraperService, PinRepository pinRepository, CommentRepository commentRepository) {
         this.webClient = webClient;
         this.pinterestScraperService = pinterestScraperService;
         this.objectMapper = objectMapper;
+        this.pinRepository = pinRepository;
+        this.commentRepository = commentRepository;
     }
 
 
