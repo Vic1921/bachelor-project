@@ -44,6 +44,13 @@ public class PinterestScraperService {
         }
     }
 
+    private void resetWebDriver() {
+        if (driver != null) {
+            driver.quit();
+        }
+        initializeWebDriver();
+    }
+
     @PreDestroy
     public void teardown() {
         if (driver != null) {
@@ -52,8 +59,7 @@ public class PinterestScraperService {
     }
 
     public boolean login() {
-
-        initializeWebDriver();
+        resetWebDriver();
 
         try {
             driver.get("https://www.pinterest.com/login/");
@@ -76,6 +82,57 @@ public class PinterestScraperService {
         }
     }
 
+    // TODO: Find out the correct xpath
+    private List<WebElement> scrollUntilAllCommentsLoaded(WebDriver driver, WebDriverWait wait) {
+        String[] xpaths = {
+                "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]/div/div[2]/div[2]/div[5]/div/div/div/div/div[2]/div",
+                "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]",
+                "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]/div",
+                "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]"
+        };
+
+        for (String xpath : xpaths) {
+            try {
+                // Get the total number of comments
+                WebElement commentsHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[contains(text(), 'Comments')]/..")));
+                String commentsText = commentsHeader.getText();
+                int totalComments = Integer.parseInt(commentsText.replaceAll("\\D+", ""));
+                log.info("Total comments: {}", totalComments);
+
+                int loadedComments = 0;
+                int previousLoadedComments = -1;
+                List<WebElement> commentElements = null;
+                WebElement commentsBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+
+                while (loadedComments < totalComments) {
+                    // Scroll within the comments box to load more comments
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(false)", commentsBox);
+                    TimeUnit.SECONDS.sleep(2); // Wait for comments to load
+
+                    // Update the number of loaded comments
+                    commentElements = driver.findElements(By.className("text-container"));
+                    loadedComments = commentElements.size();
+                    log.info("Loaded comments: {}", loadedComments);
+
+                    // Break the loop if loaded comments count doesn't change
+                    if (loadedComments == previousLoadedComments) {
+                        break;
+                    }
+                    previousLoadedComments = loadedComments;
+                }
+                return commentElements;
+            } catch (Exception e) {
+                log.error("Error with XPath: " + xpath, e);
+            }
+        }
+
+        log.error("All XPath attempts failed to load comments");
+        return List.of();
+    }
+
+
+
+    // Modify the fetchComments method to use the updated scrolling method
     public List<String> fetchComments(String pinId) {
         // Ensure the user is logged in before fetching comments
         login();
@@ -102,9 +159,10 @@ public class PinterestScraperService {
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("xuA")));
             }
 
-            // Fetch all comments
-            List<WebElement> commentElements = driver.findElements(By.className("text-container"));
+            // Scroll dynamically until all comments are loaded and return the list of comments
+            List<WebElement> commentElements = scrollUntilAllCommentsLoaded(driver, wait);
 
+            // Fetch all comments
             return commentElements.stream()
                     .map(WebElement::getText)
                     .filter(text -> !text.isEmpty())
@@ -114,8 +172,5 @@ public class PinterestScraperService {
             return List.of();
         }
     }
-
-
-
 
 }

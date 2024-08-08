@@ -37,8 +37,8 @@ class PinterestScraperServiceTest {
     @Test
     void testFetchComments() {
         // pinterestScraperService.login();
-        List<String> comments = pinterestScraperService.fetchComments("1124703706933061580");
+        List<String> comments = pinterestScraperService.fetchComments("1124703706933675772");
         assertFalse(comments.isEmpty());
-        assertEquals(10, comments.size());
+        assertEquals(26, comments.size());
     }
 }
