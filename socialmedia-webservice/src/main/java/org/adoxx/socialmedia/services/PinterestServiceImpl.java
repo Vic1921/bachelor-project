@@ -8,7 +8,7 @@ import org.adoxx.socialmedia.exceptions.BoardException;
 import org.adoxx.socialmedia.exceptions.CommentException;
 import org.adoxx.socialmedia.exceptions.PinException;
 import org.adoxx.socialmedia.exceptions.PinNotFoundException;
-import org.adoxx.socialmedia.models.Comment;
+import org.adoxx.socialmedia.models.responses.CommentDTO;
 import org.adoxx.socialmedia.models.responses.BoardDto;
 import org.adoxx.socialmedia.models.responses.PinDTO;
 import org.adoxx.socialmedia.repositories.CommentRepository;
@@ -213,7 +213,7 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
     }
 
 
-    public List<Comment> getPinComments(String pinId) {
+    public List<CommentDTO> getPinComments(String pinId) {
         // Login already in fetchComments()
         List<String> rawComments = pinterestScraperService.fetchComments(pinId); // Step 2: Fetch comments
 
@@ -227,7 +227,7 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
 
         // Step 3: Map raw comments to Comment records and return the list
         return rawComments.stream()
-                .map(comment -> new Comment(comment, pinId))
+                .map(comment -> new CommentDTO(comment, pinId))
                 .collect(Collectors.toList()); // Return comments or analysis results as needed
     }
 

@@ -1,10 +1,10 @@
 package org.adoxx.socialmedia.services;
 
-import org.adoxx.socialmedia.models.Comment;
-import org.adoxx.socialmedia.models.SentimentResult;
+import org.adoxx.socialmedia.models.responses.CommentDTO;
+import org.adoxx.socialmedia.models.responses.SentimentResultDTO;
 
 import java.util.List;
 
 public interface ISentimentAnalysisService {
-    List<SentimentResult> analyzeComments(List<Comment> comments);
+    List<SentimentResultDTO> analyzeComments(List<CommentDTO> commentDTOS);
 }

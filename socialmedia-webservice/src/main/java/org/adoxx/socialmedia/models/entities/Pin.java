@@ -3,7 +3,6 @@ package org.adoxx.socialmedia.models.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.adoxx.socialmedia.models.entities.Comment;
 
 import java.util.List;
 

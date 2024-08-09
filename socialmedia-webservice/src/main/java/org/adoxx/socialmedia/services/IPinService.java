@@ -1,6 +1,6 @@
 package org.adoxx.socialmedia.services;
 
-import org.adoxx.socialmedia.models.Comment;
+import org.adoxx.socialmedia.models.responses.CommentDTO;
 import org.adoxx.socialmedia.models.responses.PinDTO;
 import reactor.core.publisher.Mono;
 
@@ -17,5 +17,5 @@ public interface IPinService {
 
     Mono<String> postPinWithBase64(String boardId, String title, String description, String mediaUrl, String altText);
 
-    List<Comment> getPinComments(String pinId);
+    List<CommentDTO> getPinComments(String pinId);
 }

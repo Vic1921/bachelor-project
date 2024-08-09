@@ -4,8 +4,8 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import jakarta.annotation.PostConstruct;
-import org.adoxx.socialmedia.models.Comment;
-import org.adoxx.socialmedia.models.SentimentResult;
+import org.adoxx.socialmedia.models.responses.CommentDTO;
+import org.adoxx.socialmedia.models.responses.SentimentResultDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +24,9 @@ public class SentimentAnalysisServiceImpl implements ISentimentAnalysisService {
     }
 
     @Override
-    public List<SentimentResult> analyzeComments(List<Comment> comments) {
-        return comments.stream()
-                .map(comment -> new SentimentResult(comment, analyzeSentiment(comment.text())))
+    public List<SentimentResultDTO> analyzeComments(List<CommentDTO> commentDTOS) {
+        return commentDTOS.stream()
+                .map(comment -> new SentimentResultDTO(comment, analyzeSentiment(comment.text())))
                 .collect(Collectors.toList());
     }
 

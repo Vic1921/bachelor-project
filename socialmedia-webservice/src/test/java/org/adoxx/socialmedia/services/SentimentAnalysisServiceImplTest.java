@@ -1,7 +1,7 @@
 package org.adoxx.socialmedia.services;
 
-import org.adoxx.socialmedia.models.Comment;
-import org.adoxx.socialmedia.models.SentimentResult;
+import org.adoxx.socialmedia.models.responses.CommentDTO;
+import org.adoxx.socialmedia.models.responses.SentimentResultDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,11 +31,11 @@ public class SentimentAnalysisServiceImplTest {
 
     @Test
     void testAnalyzeComments() {
-        List<Comment> comments = List.of(
-                new Comment("I love this!", "123"),
-                new Comment("This is terrible.", "456")
+        List<CommentDTO> commentDTOS = List.of(
+                new CommentDTO("I love this!", "123"),
+                new CommentDTO("This is terrible.", "456")
         );
-        List<SentimentResult> results = sentimentAnalysisService.analyzeComments(comments);
+        List<SentimentResultDTO> results = sentimentAnalysisService.analyzeComments(commentDTOS);
         assertNotNull(results); // Ensure results are returned
         assertEquals(2, results.size()); // Ensure a result is returned for each comment
     }
