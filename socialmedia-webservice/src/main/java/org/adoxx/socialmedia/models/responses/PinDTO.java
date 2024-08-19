@@ -1,5 +1,8 @@
 package org.adoxx.socialmedia.models.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,8 +23,8 @@ public class PinDTO {
     private String boardOwnerUsername;
     private MediaDetails media;
     private String note;
-    private Map<String, Integer> pinMetrics90d;
-    private Map<String, Integer> pinMetricsAllTime;
+    @JsonProperty("pin_metrics")
+    private PinMetrics pinMetrics;
 
 
     @Getter
@@ -42,5 +45,34 @@ public class PinDTO {
     public static class MediaDetails {
         private Map<String, ImageDetails> images;
         private String media_type;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PinMetrics {
+        private MetricDetails lifetimeMetrics;
+
+        @JsonProperty("90d")
+        private MetricDetails last90Days;
+
+        @Getter
+        @Setter
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class MetricDetails {
+            private int outboundClick;
+            private int impression;
+
+            @JsonFormat(pattern = "EEE, dd MMM yyyy HH:mm:ss Z", timezone = "UTC")
+            private LocalDateTime lastUpdated;
+            private Integer userFollow;
+            private Integer profileVisit;
+            private Integer pinClick;
+            private Integer save;
+            private Integer reaction;
+            private Integer comment;
+        }
     }
 }

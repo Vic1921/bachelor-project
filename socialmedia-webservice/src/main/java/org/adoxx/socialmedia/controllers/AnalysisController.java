@@ -18,33 +18,28 @@ public class AnalysisController {
     private ISentimentAnalysisService analysisService;
 
     @Autowired
-    private IPinService pinService;
-
-    @Autowired
     private ICommentCategoryService categoryService;
 
     @Autowired
     private DataService dataService;
 
     @Autowired
-    private MockDataService mockDataService;
+    private PinCommentService pinCommentService;
 
     @GetMapping("/{pinId}")
     public List<SentimentResultDTO> getAnalysis(@PathVariable String pinId) {
-        List<CommentDTO> commentDTOS = pinService.getPinComments(pinId);
+        List<CommentDTO> commentDTOS = pinCommentService.getPinComments(pinId);
         return analysisService.analyzeComments(commentDTOS);
     }
 
     @PostMapping("/categorized/{pinId}")
     public ModelFeedbackOverview getCategories(@PathVariable String pinId, @RequestBody List<SentimentResultDTO> sentimentResultDTOList) {
-        // List<Comment> comments = mockDataService.generateMockComments(20);
         List<CommentDTO> commentDTOS = sentimentResultDTOList.stream().map(SentimentResultDTO::commentDTO).toList();
         return categoryService.categorizeComments(commentDTOS);
     }
 
     @PostMapping("/sentiment-summary/{pinId}")
     public Map<String, Integer> getSentimentSummary(@PathVariable String pinId, @RequestBody List<SentimentResultDTO> sentimentResultDTOList) {
-        // List<SentimentResult> mockData = mockDataService.generateMockSentimentResults(20);
         return dataService.prepareDataForDisplay(sentimentResultDTOList);
     }
 

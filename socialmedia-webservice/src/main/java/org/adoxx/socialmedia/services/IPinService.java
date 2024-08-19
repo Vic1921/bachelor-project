@@ -17,5 +17,4 @@ public interface IPinService {
 
     Mono<String> postPinWithBase64(String boardId, String title, String description, String mediaUrl, String altText);
 
-    List<CommentDTO> getPinComments(String pinId);
 }

@@ -5,18 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.adoxx.socialmedia.exceptions.BoardException;
-import org.adoxx.socialmedia.exceptions.CommentException;
 import org.adoxx.socialmedia.exceptions.PinException;
 import org.adoxx.socialmedia.exceptions.PinNotFoundException;
-import org.adoxx.socialmedia.models.responses.CommentDTO;
+import org.adoxx.socialmedia.models.entities.Comment;
+import org.adoxx.socialmedia.models.entities.Pin;
 import org.adoxx.socialmedia.models.responses.BoardDto;
 import org.adoxx.socialmedia.models.responses.PinDTO;
 import org.adoxx.socialmedia.repositories.CommentRepository;
 import org.adoxx.socialmedia.repositories.PinRepository;
+import org.adoxx.socialmedia.util.CommentMapper;
+import org.adoxx.socialmedia.util.PinMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 import java.util.Map;
@@ -28,16 +31,14 @@ import java.util.stream.Collectors;
 public class PinterestServiceImpl implements IBoardService, IPinService {
 
     private final WebClient webClient;
-    private final PinterestScraperService pinterestScraperService;
     private final ObjectMapper objectMapper;
-    private final PinRepository pinRepository;
-    private final CommentRepository commentRepository;
+    private PinRepository pinRepository;
+    private CommentRepository commentRepository;
 
 
     @Autowired
-    public PinterestServiceImpl(WebClient webClient, ObjectMapper objectMapper, PinterestScraperService pinterestScraperService, PinRepository pinRepository, CommentRepository commentRepository) {
+    public PinterestServiceImpl(WebClient webClient, ObjectMapper objectMapper, PinRepository pinRepository, CommentRepository commentRepository) {
         this.webClient = webClient;
-        this.pinterestScraperService = pinterestScraperService;
         this.objectMapper = objectMapper;
         this.pinRepository = pinRepository;
         this.commentRepository = commentRepository;
@@ -120,18 +121,29 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
     @Override
     public Mono<PinDTO> getPin(String pinId) {
         return webClient.get()
-                .uri("/pins/" + pinId)
+                .uri("/pins/" + pinId + "?pin_metrics=true")
                 .retrieve()
                 .bodyToMono(String.class)
+                .publishOn(Schedulers.boundedElastic())
                 .map(response -> {
                     try {
-                        return objectMapper.readValue(response, PinDTO.class);
+                        PinDTO pinDTO = PinMapper.toDTO(response);
+
+                        // Get comment count
+                        Integer comments = pinDTO.getPinMetrics().getLifetimeMetrics().getComment();
+                        log.info("Comment count: {}", comments);
+
+                        // Convert and save pin to database
+                        Pin pin = PinMapper.toEntity(pinDTO);
+                        pinRepository.save(pin);
+                        return pinDTO;
                     } catch (Exception e) {
                         log.error("Failed to parse Pin response: {}", e.getMessage());
                         throw new PinNotFoundException("Failed to get pin with id: " + pinId + " with error msg: " + e.getMessage());
                     }
                 });
     }
+
 
 
     @Override
@@ -213,23 +225,6 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
     }
 
 
-    public List<CommentDTO> getPinComments(String pinId) {
-        // Login already in fetchComments()
-        List<String> rawComments = pinterestScraperService.fetchComments(pinId); // Step 2: Fetch comments
-
-        if (rawComments.isEmpty()) {
-            log.warn("No comments found for pin with id: {}", pinId);
-            throw new CommentException("No comments found for pin with id: " + pinId);
-        }
-
-        // TODO: Add persistence logic here thru CommentRepository
-        // commentRepository.saveAll(comments);
-
-        // Step 3: Map raw comments to Comment records and return the list
-        return rawComments.stream()
-                .map(comment -> new CommentDTO(comment, pinId))
-                .collect(Collectors.toList()); // Return comments or analysis results as needed
-    }
 
 
 }
