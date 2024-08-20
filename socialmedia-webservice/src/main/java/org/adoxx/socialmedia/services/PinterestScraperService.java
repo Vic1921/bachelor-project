@@ -34,11 +34,13 @@ public class PinterestScraperService {
 
     private void initializeWebDriver() {
         if (driver == null) {
-            System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+            System.setProperty("webdriver.chrome.driver", System.getenv("WEB_DRIVER_PATH"));
 
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless");
             options.addArguments("--disable-gpu");
+            options.addArguments("--no-sandbox");  // Important for Docker
+            options.addArguments("--disable-dev-shm-usage");
             options.addArguments("--window-size=1300,760");
 
             driver = new ChromeDriver(options);

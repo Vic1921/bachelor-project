@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./socialmedia-webservice
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/data/demo
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=${H2_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - PINTEREST_ACCESS_TOKEN=${PINTEREST_ACCESS_TOKEN}
+      - PINTEREST_EMAIL=${PINTEREST_EMAIL}
+      - PINTEREST_PASSWORD=${PINTEREST_PASSWORD}
+      - WEB_DRIVER_PATH=/usr/bin/chromedriver
+    networks:
+      - socialmedia-net
+
+  frontend:
+    build: ./socialmedia-fe
+    ports:
+      - "4200:80"
+    networks:
+      - socialmedia-net
+
+networks:
+  socialmedia-net:
