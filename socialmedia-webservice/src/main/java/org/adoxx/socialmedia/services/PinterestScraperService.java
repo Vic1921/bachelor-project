@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class PinterestScraperService {
 
     private WebDriver driver;
+    private boolean loggedIn = false;
 
     @Value("${webdriver.chrome.driver}")
     private String chromeDriverPath;
@@ -44,13 +45,6 @@ public class PinterestScraperService {
         }
     }
 
-    private void resetWebDriver() {
-        if (driver != null) {
-            driver.quit();
-        }
-        initializeWebDriver();
-    }
-
     @PreDestroy
     public void teardown() {
         if (driver != null) {
@@ -59,7 +53,11 @@ public class PinterestScraperService {
     }
 
     public boolean login() {
-        resetWebDriver();
+        if (loggedIn) {
+            return true;
+        }
+
+        initializeWebDriver();
 
         try {
             driver.get("https://www.pinterest.com/login/");
@@ -75,14 +73,14 @@ public class PinterestScraperService {
 
             // Add a simple check to confirm login
             TimeUnit.SECONDS.sleep(10);  // Wait for login to process
-            return driver.getCurrentUrl().contains("https://www.pinterest.com/");
+            loggedIn = true;
+            return true;
         } catch (Exception e) {
             log.error("Login failed", e);
             return false;
         }
     }
 
-    // TODO: Find out the correct xpath
     private List<WebElement> scrollUntilAllCommentsLoaded(WebDriver driver, WebDriverWait wait) {
         String[] xpaths = {
                 "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]/div/div[2]/div[2]/div[5]/div/div/div/div/div[2]/div",
@@ -130,12 +128,11 @@ public class PinterestScraperService {
         return List.of();
     }
 
-
-
-    // Modify the fetchComments method to use the updated scrolling method
     public List<String> fetchComments(String pinId) {
-        // Ensure the user is logged in before fetching comments
-        login();
+        if (!login()) {
+            log.error("Login failed, cannot fetch comments");
+            return List.of();
+        }
 
         try {
             driver.get("https://www.pinterest.com/pin/" + pinId);
@@ -172,5 +169,4 @@ public class PinterestScraperService {
             return List.of();
         }
     }
-
 }
