@@ -166,6 +166,7 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
 
     @Override
     public Mono<String> deletePin(String pinId) {
+        log.info("Deleting pin with id: {}", pinId);
         return webClient.delete()
                 .uri("/pins/" + pinId)
                 .retrieve()

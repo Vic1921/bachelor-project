@@ -29,4 +29,8 @@ export class DataService {
     return this.http.post<void>(`${this.baseUrl}/post-comment/${pinId}`, feedbackOverview);
   }
 
+  getGlobalKPI(): Observable<Map<string, number>> {
+    return this.http.post<Map<string, number>>(`${this.baseUrl}/global-kpi`, {});
+  }
+
 }

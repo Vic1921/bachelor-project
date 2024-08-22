@@ -26,6 +26,9 @@ public class AnalysisController {
     @Autowired
     private PinCommentService pinCommentService;
 
+    @Autowired
+    private GlobalKPIService globalKPIService;
+
     @GetMapping("/{pinId}")
     public List<SentimentResultDTO> getAnalysis(@PathVariable String pinId) {
         List<CommentDTO> commentDTOS = pinCommentService.getPinComments(pinId);
@@ -46,5 +49,10 @@ public class AnalysisController {
     @PostMapping("post-comment/{pinId}")
     public void postComment(@PathVariable String pinId, @RequestBody ModelFeedbackOverview modelFeedbackOverview) {
         pinCommentService.postComment(pinId, modelFeedbackOverview);
+    }
+
+    @PostMapping("/global-kpi")
+    public Map<String, Integer> getGlobalKPI() {
+        return globalKPIService.aggregateSentimentData();
     }
 }

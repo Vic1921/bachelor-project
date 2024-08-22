@@ -5,6 +5,7 @@ import { BoardsComponent } from "./components/boards/boards.component";
 import { BoardDetailComponent } from "./components/board-detail/board-detail.component";
 import {PinDetailComponent} from "./components/pin-detail/pin-detail.component";
 import {PinAnalysisComponent} from "./components/pin-analysis/pin-analysis.component";
+import {GlobalKPIComponent} from "./components/global-kpi/global-kpi.component";
 
 export const routes: Routes = [
   {
@@ -36,5 +37,10 @@ export const routes: Routes = [
     path: 'pin-analysis/:pinId',
     component: PinAnalysisComponent,
     title: 'Analysis Dashboard'
+  },
+  {
+    path: 'global-kpis',
+    component: GlobalKPIComponent,
+    title: 'Global KPI'
   }
 ];
