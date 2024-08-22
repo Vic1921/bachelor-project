@@ -41,4 +41,10 @@ class PinterestScraperServiceTest {
         assertFalse(comments.isEmpty());
         assertEquals(26, comments.size());
     }
+
+    @Test
+    void testPostComment() {
+        pinterestScraperService.postComment("1124703706933675772", "Test comment from testPostComment");
+        //assertNotNull(comment);
+    }
 }

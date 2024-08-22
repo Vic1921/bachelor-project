@@ -34,7 +34,7 @@ public class PinterestScraperService {
 
     private void initializeWebDriver() {
         if (driver == null) {
-            System.setProperty("webdriver.chrome.driver", System.getenv("WEB_DRIVER_PATH"));
+            System.setProperty("webdriver.chrome.driver", /*chromeDriverPath*/System.getenv("WEB_DRIVER_PATH"));
 
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless");
@@ -169,6 +169,40 @@ public class PinterestScraperService {
         } catch (Exception e) {
             log.error("Fetching comments failed", e);
             return List.of();
+        }
+    }
+
+    // Method to post the result of the analysis as a comment
+    public void postComment(String pinId, String comment) {
+        if (!login()) {
+            log.error("Login failed, cannot post comment");
+            return;
+        }
+
+        try {
+            driver.get("https://www.pinterest.com/pin/" + pinId);
+
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(12));
+
+            // Scroll a little to ensure the comments section can load
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,250)", "");
+
+            // Wait a bit to give the page time to load comments
+            TimeUnit.SECONDS.sleep(5);
+
+            // Scroll to see the comment section a bit better
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,250)", "");
+
+            // Find the comment box and post the comment
+            WebElement commentBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div[1]/div/div/div/div/div[2]/div")));
+            commentBox.click();
+            commentBox.sendKeys(comment);
+
+            // Find the submit button and click it
+            WebElement postButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div/div/div[2]/div")));
+            postButton.click();
+        } catch (Exception e) {
+            log.error("Posting comment failed", e);
         }
     }
 }
