@@ -68,7 +68,7 @@ public class PinCommentService {
         int newCommentCount = pinDTO.getPinMetrics().getLifetimeMetrics().getComment();
         log.info("New comment count for pin with id: {} is: {}", pinId, newCommentCount);
 
-        if (currentCommentCount >= newCommentCount) {
+        if (currentCommentCount == newCommentCount) {
             log.info("No new comments found for pin with id: {}", pinId);
 
             return pin.getComments().stream()
@@ -95,6 +95,7 @@ public class PinCommentService {
     }
 
     public void postComment(String pinId, ModelFeedbackOverview categories) {
+        log.info("Posting comment for pin with id: {}", pinId);
         String comment = categories.toFormattedComment();
 
         Pin pin = pinRepository.findById(pinId)

@@ -25,5 +25,8 @@ export class DataService {
     return this.http.post<Map<string, number>>(`${this.baseUrl}/sentiment-summary/${pinId}`, sentimentResults);
   }
 
+  postFeedbackOnPinterest(pinId: string, feedbackOverview: ModelFeedbackOverview): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/post-comment/${pinId}`, feedbackOverview);
+  }
 
 }

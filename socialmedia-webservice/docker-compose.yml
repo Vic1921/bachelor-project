@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    build: ./socialmedia-webservice
+    build: C:\Users\victo\IdeaProjects\bachelor-project\socialmedia-webservice
     ports:
       - "8081:8081"
     environment:
@@ -18,7 +18,7 @@ services:
       - socialmedia-net
 
   frontend:
-    build: ./socialmedia-fe
+    build: C:\Users\victo\IdeaProjects\bachelor-project\socialmedia-fe
     ports:
       - "4200:80"
     networks:
