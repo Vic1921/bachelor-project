@@ -3,10 +3,12 @@ package org.adoxx.socialmedia.services;
 import lombok.extern.slf4j.Slf4j;
 import org.adoxx.socialmedia.exceptions.CommentException;
 import org.adoxx.socialmedia.exceptions.PinException;
+import org.adoxx.socialmedia.models.ModelFeedbackOverview;
 import org.adoxx.socialmedia.models.entities.Comment;
 import org.adoxx.socialmedia.models.entities.Pin;
 import org.adoxx.socialmedia.models.responses.CommentDTO;
 import org.adoxx.socialmedia.models.responses.PinDTO;
+import org.adoxx.socialmedia.models.responses.SentimentResultDTO;
 import org.adoxx.socialmedia.repositories.CommentRepository;
 import org.adoxx.socialmedia.repositories.PinRepository;
 import org.adoxx.socialmedia.util.CommentMapper;
@@ -90,6 +92,36 @@ public class PinCommentService {
         return newComments.stream()
                 .map(comment -> new CommentDTO(comment.getText(), pinId))
                 .collect(Collectors.toList());
+    }
+
+    public void postComment(String pinId, ModelFeedbackOverview categories) {
+        String comment = categories.toFormattedComment();
+
+        Pin pin = pinRepository.findById(pinId)
+                .orElseThrow(() -> new PinException("Pin with id: " + pinId + " not found"));
+
+        // Check if the comment already exists
+        boolean commentExists = pin.getComments().stream()
+                .anyMatch(existingComment -> existingComment.getText().equals(comment));
+
+        if (commentExists) {
+            log.info("Comment already exists for pin with id: {}", pinId);
+            return;
+        }
+
+        // Post the comment using the scraper
+        log.info("Posting comment for pin with id: {}", pinId);
+        pinterestScraperService.postComment(pinId, comment);
+
+        // Save the new comment to the database
+        Comment newComment = CommentMapper.toEntity(comment, pinId);
+        log.info("Saving comment for pin with id: {}", pinId);
+        commentRepository.save(newComment);
+
+        pin.getComments().add(newComment);
+        pin.setCommentCount(pin.getCommentCount() + 1);
+        log.info("Updating comment count for pin with id: {}", pinId);
+        pinRepository.save(pin);
     }
 
 }

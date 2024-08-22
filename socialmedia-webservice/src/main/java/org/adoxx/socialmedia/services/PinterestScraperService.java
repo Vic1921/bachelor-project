@@ -34,7 +34,7 @@ public class PinterestScraperService {
 
     private void initializeWebDriver() {
         if (driver == null) {
-            System.setProperty("webdriver.chrome.driver", /*chromeDriverPath*/System.getenv("WEB_DRIVER_PATH"));
+            System.setProperty("webdriver.chrome.driver", chromeDriverPath/*System.getenv("WEB_DRIVER_PATH")*/);
 
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless");

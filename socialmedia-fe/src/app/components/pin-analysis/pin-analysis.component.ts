@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import {PieChartComponent} from "../pie-chart/pie-chart.component";
-import {CategoryTableComponent} from "../category-table/category-table.component";
-import {DataService} from "../../services/data/data.service";
-import {ModelFeedbackOverview} from "../../models/model-feedback-overview";
-import {SentimentResult} from "../../models/sentiment-result";
+import { PieChartComponent } from '../pie-chart/pie-chart.component';
+import { CategoryTableComponent } from '../category-table/category-table.component';
+import { DataService } from '../../services/data/data.service';
+import { ModelFeedbackOverview } from '../../models/model-feedback-overview';
+import { SentimentResult } from '../../models/sentiment-result';
 
 @Component({
   selector: 'app-pin-analysis',
@@ -38,7 +38,15 @@ export class PinAnalysisComponent implements OnInit {
           console.log(this.feedbackOverview);
         });
       });
-      }
     }
+  }
 
+  postFeedbackOnPinterest(): void {
+    const pinId = this.route.snapshot.paramMap.get('pinId');
+    if (pinId) {
+      this.dataService.postFeedbackOnPinterest(pinId, this.feedbackOverview).subscribe(() => {
+        console.log('Feedback posted on Pinterest');
+      });
+    }
+  }
 }

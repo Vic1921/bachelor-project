@@ -43,4 +43,8 @@ public class AnalysisController {
         return dataService.prepareDataForDisplay(sentimentResultDTOList);
     }
 
+    @PostMapping("post-comment/{pinId}")
+    public void postComment(@PathVariable String pinId, @RequestBody ModelFeedbackOverview modelFeedbackOverview) {
+        pinCommentService.postComment(pinId, modelFeedbackOverview);
+    }
 }
