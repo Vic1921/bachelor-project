@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   backend:
-    build: C:\Users\victo\IdeaProjects\bachelor-project\socialmedia-webservice
+    build: socialmedia-webservice
     ports:
       - "8081:8081"
     environment:
@@ -10,17 +8,16 @@ services:
       - SPRING_DATASOURCE_USERNAME=sa
       - SPRING_DATASOURCE_PASSWORD=${H2_PASSWORD}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - PINTEREST_ACCESS_TOKEN=${PINTEREST_ACCESS_TOKEN}
-      - PINTEREST_EMAIL=${PINTEREST_EMAIL}
-      - PINTEREST_PASSWORD=${PINTEREST_PASSWORD}
       - WEB_DRIVER_PATH=/usr/bin/chromedriver
+    env_file:
+      - secrets.env
     networks:
       - socialmedia-net
 
   frontend:
-    build: C:\Users\victo\IdeaProjects\bachelor-project\socialmedia-fe
+    build: socialmedia-fe
     ports:
-      - "4200:80"
+      - "4201:80"
     networks:
       - socialmedia-net
 

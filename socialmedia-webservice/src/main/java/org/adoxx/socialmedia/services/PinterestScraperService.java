@@ -1,5 +1,6 @@
 package org.adoxx.socialmedia.services;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -23,9 +24,6 @@ public class PinterestScraperService {
     private WebDriver driver;
     private boolean loggedIn = false;
 
-    @Value("${webdriver.chrome.driver}")
-    private String chromeDriverPath;
-
     @Value("${pinterest.email}")
     private String email;
 
@@ -33,8 +31,9 @@ public class PinterestScraperService {
     private String password;
 
     private void initializeWebDriver() {
+
         if (driver == null) {
-            System.setProperty("webdriver.chrome.driver", chromeDriverPath/*System.getenv("WEB_DRIVER_PATH")*/);
+            WebDriverManager.chromedriver().setup();
 
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless");
