@@ -20,7 +20,7 @@ ENV CHROME_BIN=/usr/bin/chromium-browser \
 
 # Set the working directory inside the container
 WORKDIR /app
-
+RUN ls -la
 # Copy the built jar file into the container
 COPY target/socialmedia-webservice-0.0.1-SNAPSHOT.jar /app/socialmedia-webservice.jar
 
