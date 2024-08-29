@@ -6,9 +6,9 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:h2:file:/data/demo
       - SPRING_DATASOURCE_USERNAME=sa
-      - SPRING_DATASOURCE_PASSWORD=${H2_PASSWORD}
+      - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - WEB_DRIVER_PATH=/usr/bin/chromedriver
+      - WEBDRIVER_CHROME_DRIVER=/usr/bin/chromedriver
     env_file:
       - secrets.env
     networks:

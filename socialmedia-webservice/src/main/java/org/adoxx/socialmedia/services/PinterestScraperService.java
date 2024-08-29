@@ -31,20 +31,30 @@ public class PinterestScraperService {
     private String password;
 
     private void initializeWebDriver() {
+        log.info("Initializing WebDriver");
+        try {
+            if (driver == null) {
+                log.info("Setting up ChromeDriver via WebDriverManager");
+                WebDriverManager.chromedriver().setup();
+                String chromeDriverPath = WebDriverManager.chromedriver().getDownloadedDriverPath();
+                log.info("ChromeDriver path: {}", chromeDriverPath);
 
-        if (driver == null) {
-            WebDriverManager.chromedriver().setup();
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--headless");
+                options.addArguments("--disable-gpu");
+                options.addArguments("--no-sandbox");
+                options.addArguments("--disable-dev-shm-usage");
+                options.addArguments("--window-size=1300,760");
 
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless");
-            options.addArguments("--disable-gpu");
-            options.addArguments("--no-sandbox");  // Important for Docker
-            options.addArguments("--disable-dev-shm-usage");
-            options.addArguments("--window-size=1300,760");
+                driver = WebDriverManager.chromedriver().capabilities(options).create();
 
-            driver = new ChromeDriver(options);
+                log.info("WebDriver initialized successfully");
+            }
+        } catch (Exception e) {
+            log.error("Failed to initialize WebDriver", e);
         }
     }
+
 
     @PreDestroy
     public void teardown() {
