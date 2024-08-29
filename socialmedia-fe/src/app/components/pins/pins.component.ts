@@ -18,7 +18,7 @@ import { PinRequestBase64 } from "../../models/pin-request-base64";
 export class PinsComponent implements OnInit {
   pins$: Observable<PinDTO[]> = of([]);
   pinForm: FormGroup;
-  pinFormBase64: FormGroup;
+  selectedFile: File | null = null;
 
   constructor(
     private pinService: PinService,
@@ -28,15 +28,6 @@ export class PinsComponent implements OnInit {
       boardId: [''],
       title: [''],
       description: [''],
-      mediaUrl: [''],
-      altText: ['']
-    });
-
-    this.pinFormBase64 = this.fb.group({
-      boardId: [''],
-      title: [''],
-      description: [''],
-      base64Image: [''],
       altText: ['']
     });
   }
@@ -45,20 +36,29 @@ export class PinsComponent implements OnInit {
     this.pins$ = this.pinService.getPins();
   }
 
-  createPinWithUrl(): void {
-    const pinRequest: PinRequest = this.pinForm.value;
-    this.pinService.postPinWithUrl(pinRequest).subscribe(() => {
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0] || null;
+  }
+
+  createPin(): void {
+    if (!this.selectedFile) {
+      console.error('No file selected');
+      return;
+    }
+
+    const formData: FormData = new FormData();
+    formData.append('boardId', this.pinForm.get('boardId')?.value);
+    formData.append('title', this.pinForm.get('title')?.value);
+    formData.append('description', this.pinForm.get('description')?.value);
+    formData.append('image', this.selectedFile);
+    formData.append('altText', this.pinForm.get('altText')?.value);
+
+    this.pinService.postPinWithImageFile(formData).subscribe(() => {
       this.pins$ = this.pinService.getPins();
       this.pinForm.reset();
+      this.selectedFile = null;
     });
   }
 
-  createPinWithBase64(): void {
-    const pinRequestBase64: PinRequestBase64 = this.pinFormBase64.value;
-    this.pinService.postPinWithBase64(pinRequestBase64).subscribe(() => {
-      this.pins$ = this.pinService.getPins();
-      this.pinFormBase64.reset();
-    });
-  }
 
 }

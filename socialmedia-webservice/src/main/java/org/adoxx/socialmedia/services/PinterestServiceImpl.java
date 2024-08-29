@@ -17,10 +17,12 @@ import org.adoxx.socialmedia.util.CommentMapper;
 import org.adoxx.socialmedia.util.PinMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -225,7 +227,43 @@ public class PinterestServiceImpl implements IBoardService, IPinService {
                 });
     }
 
+    @Override
+    public Mono<String> postPin(String boardId, String title, String description, MultipartFile image, String altText) {
+        Map<String, Object> mediaSource = Map.of(
+                "source_type", "image_base64",
+                "content_type", "image/png",
+                "data", convertImageToBase64(image),
+                "is_standard", true
+        );
 
+        return webClient.post()
+                .uri("/pins")
+                .bodyValue(Map.of(
+                        "board_id", boardId,
+                        "title", title,
+                        "description", description,
+                        "media_source", mediaSource,
+                        "alt_text", altText
+                ))
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnError(error -> {
+                    throw new PinException("Failed to post pin with base64 image: " + error.getMessage());
+                });
+    }
 
+    // Convert image to base64
+    private String convertImageToBase64(MultipartFile image) {
+        try {
+            log.info("Converting image to base64");
+            byte[] imageBytes = image.getBytes();
+            log.info("Image size: {}", imageBytes.length);
+            return Base64.getEncoder().encodeToString(imageBytes);
+        } catch (Exception e) {
+            log.error("Failed to convert image to base64: {}", e.getMessage());
+            throw new PinException("Failed to convert image to base64");
+        }
+
+    }
 
 }
