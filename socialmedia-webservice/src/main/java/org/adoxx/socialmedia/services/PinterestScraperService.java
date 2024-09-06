@@ -40,7 +40,7 @@ public class PinterestScraperService {
                 log.info("ChromeDriver path: {}", chromeDriverPath);
 
                 ChromeOptions options = new ChromeOptions();
-                //options.addArguments("--headless");
+                options.addArguments("--headless");
                 options.addArguments("--disable-gpu");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
