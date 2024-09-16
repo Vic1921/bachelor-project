@@ -4,13 +4,12 @@ services:
     ports:
       - "8081:8081"
     environment:
+      - SPRING_PROFILES_ACTIVE=default
       - SPRING_DATASOURCE_URL=jdbc:h2:file:/data/demo
       - SPRING_DATASOURCE_USERNAME=sa
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - WEBDRIVER_CHROME_DRIVER=/usr/bin/chromedriver
-    env_file:
-      - secrets.env
     networks:
       - socialmedia-net
 

@@ -3,6 +3,7 @@ package org.adoxx.socialmedia.services;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -35,10 +36,8 @@ public class PinterestWebService {
         log.info("Initializing WebDriver");
         try {
             if (driver == null) {
-                log.info("Setting up ChromeDriver via WebDriverManager");
-                WebDriverManager.chromedriver().setup();
-                String chromeDriverPath = WebDriverManager.chromedriver().getDownloadedDriverPath();
-                log.info("ChromeDriver path: {}", chromeDriverPath);
+                log.info("Using system-installed ChromeDriver");
+                System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
 
                 ChromeOptions options = new ChromeOptions();
                 options.addArguments("--headless");
@@ -47,7 +46,7 @@ public class PinterestWebService {
                 options.addArguments("--disable-dev-shm-usage");
                 options.addArguments("--window-size=2300,1352");
 
-                driver = WebDriverManager.chromedriver().capabilities(options).create();
+                driver = new ChromeDriver(options);
 
                 log.info("WebDriver initialized successfully");
             }
@@ -95,6 +94,7 @@ public class PinterestWebService {
 
 
     private List<WebElement> scrollUntilAllCommentsLoaded(WebDriver driver, WebDriverWait wait) {
+        log.info("Scrolling to load all comments");
         String absoluteXpath = "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]";
 
         try {
@@ -142,6 +142,8 @@ public class PinterestWebService {
             log.error("Login failed, cannot fetch comments");
             return List.of();
         }
+
+        log.info("Fetching comments for pin {} this might take a while as the webdriver is downloaded and started", pinId);
 
         try {
             driver.get("https://www.pinterest.com/pin/" + pinId);
