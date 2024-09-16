@@ -33,4 +33,8 @@ export class PinService {
     return this.http.post<string>(`${this.baseUrl}/pins/base64`, pinRequestBase64);
   }
 
+  postPinWithImageFile(formData: FormData): Observable<string> {
+    return this.http.post<string>(`${this.baseUrl}/pins`, formData);
+  }
+
 }

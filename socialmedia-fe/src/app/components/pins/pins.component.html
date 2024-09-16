@@ -11,33 +11,18 @@
     </li>
   </ul>
 
-  <h3>Create Pin with URL</h3>
-  <form [formGroup]="pinForm" (ngSubmit)="createPinWithUrl()">
+  <h3>Create Pin</h3>
+  <form [formGroup]="pinForm" (ngSubmit)="createPin()">
     <label for="boardId">Board ID:</label>
     <input id="boardId" formControlName="boardId" />
     <label for="title">Title:</label>
     <input id="title" formControlName="title" />
     <label for="description">Description:</label>
     <input id="description" formControlName="description" />
-    <label for="mediaUrl">Media URL:</label>
-    <input id="mediaUrl" formControlName="mediaUrl" />
     <label for="altText">Alt Text:</label>
     <input id="altText" formControlName="altText" />
-    <button type="submit">Create Pin</button>
-  </form>
-
-  <h3>Create Pin with Base64</h3>
-  <form [formGroup]="pinFormBase64" (ngSubmit)="createPinWithBase64()">
-    <label for="boardId">Board ID:</label>
-    <input id="boardId" formControlName="boardId" />
-    <label for="title">Title:</label>
-    <input id="title" formControlName="title" />
-    <label for="description">Description:</label>
-    <input id="description" formControlName="description" />
-    <label for="base64Image">Base64 Image:</label>
-    <input id="base64Image" formControlName="base64Image" />
-    <label for="altText">Alt Text:</label>
-    <input id="altText" formControlName="altText" />
+    <label for="image">Image:</label>
+    <input type="file" (change)="onFileSelected($event)" />
     <button type="submit">Create Pin</button>
   </form>
 </div>

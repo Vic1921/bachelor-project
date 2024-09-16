@@ -6,6 +6,7 @@ import org.adoxx.socialmedia.exceptions.PinNotFoundException;
 import org.adoxx.socialmedia.models.requests.CreateBoardRequest;
 import org.adoxx.socialmedia.models.requests.PinRequest;
 import org.adoxx.socialmedia.models.requests.PinRequestBase64;
+import org.adoxx.socialmedia.models.requests.PinRequestNormal;
 import org.adoxx.socialmedia.models.responses.BoardDto;
 import org.adoxx.socialmedia.models.responses.PinDTO;
 import org.adoxx.socialmedia.services.IPinService;
@@ -13,6 +14,7 @@ import org.adoxx.socialmedia.services.IBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -112,6 +114,22 @@ public class PinterestController {
                         pinRequestBase64.getDescription(),
                         pinRequestBase64.getBase64Image(),
                         pinRequestBase64.getAltText())
+                .map(ResponseEntity::ok);
+    }
+
+    @PostMapping(value = "/pins", consumes = "multipart/form-data")
+    public Mono<ResponseEntity<String>> postPin(
+            @RequestParam("boardId") String boardId,
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("altText") String altText) {
+
+        if (boardId == null || title == null || description == null || image == null || altText == null) {
+            throw new InvalidRequestException("All fields must be provided");
+        }
+
+        return pinService.postPin(boardId, title, description, image, altText)
                 .map(ResponseEntity::ok);
     }
 
