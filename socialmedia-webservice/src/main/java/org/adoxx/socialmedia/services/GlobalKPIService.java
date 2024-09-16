@@ -2,11 +2,12 @@ package org.adoxx.socialmedia.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.adoxx.socialmedia.exceptions.PinException;
+import org.adoxx.socialmedia.models.ModelFeedbackOverview;
 import org.adoxx.socialmedia.models.entities.Pin;
 import org.adoxx.socialmedia.models.responses.CommentDTO;
 import org.adoxx.socialmedia.models.responses.SentimentResultDTO;
+import org.adoxx.socialmedia.repositories.CommentRepository;
 import org.adoxx.socialmedia.repositories.PinRepository;
-import org.adoxx.socialmedia.util.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +19,17 @@ import java.util.Map;
 @Service
 public class GlobalKPIService {
 
-    private final ISentimentAnalysisService analysisService;
     private final PinRepository pinRepository;
+    private final CommentRepository commentRepository;
+    private final ICommentCategoryService categoryService;
+    private final ISentimentAnalysisService analysisService;
 
     @Autowired
-    public GlobalKPIService(ISentimentAnalysisService analysisService, PinRepository pinRepository) {
+    public GlobalKPIService(ISentimentAnalysisService analysisService, PinRepository pinRepository, CommentRepository commentRepository, ICommentCategoryService categoryService) {
         this.analysisService = analysisService;
         this.pinRepository = pinRepository;
+        this.commentRepository = commentRepository;
+        this.categoryService = categoryService;
     }
 
     public Map<String, Integer> aggregateSentimentData() {
@@ -68,5 +73,13 @@ public class GlobalKPIService {
         }
 
         return sentimentSummary;
+    }
+
+    public ModelFeedbackOverview aggregateComments() {
+        List<CommentDTO> globalComments = commentRepository.findAll().stream()
+                .map(comment -> new CommentDTO(comment.getText(), comment.getPin().getPinId()))
+                .toList();
+
+        return categoryService.categorizeComments(globalComments, true);
     }
 }

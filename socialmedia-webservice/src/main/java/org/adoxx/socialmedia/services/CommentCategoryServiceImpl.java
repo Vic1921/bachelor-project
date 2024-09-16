@@ -11,31 +11,29 @@ import java.util.List;
 public class CommentCategoryServiceImpl implements ICommentCategoryService {
 
     @Override
-    public ModelFeedbackOverview categorizeComments(List<CommentDTO> commentDTOS) {
+    public ModelFeedbackOverview categorizeComments(List<CommentDTO> commentDTOS, boolean isGlobal) {
         StringBuilder topConcerns = new StringBuilder();
         StringBuilder favoriteAspects = new StringBuilder();
         StringBuilder mostRequestedFeatures = new StringBuilder();
+
 
         for (CommentDTO commentDTO : commentDTOS) {
             String category = CommentCategorizer.categorizeComment(commentDTO.text());
             switch (category) {
                 case "Top Concern":
-                    if (topConcerns.isEmpty()) {
-                        topConcerns.append(commentDTO.text());
+                    if (isGlobal || topConcerns.isEmpty()) {
+                        topConcerns.append(commentDTO.text()).append(" ");
                     }
                     break;
                 case "Favorite Aspect":
-                    if (favoriteAspects.isEmpty()) {
-                        favoriteAspects.append(commentDTO.text());
+                    if (isGlobal || favoriteAspects.isEmpty()) {
+                        favoriteAspects.append(commentDTO.text()).append(" ");
                     }
                     break;
                 case "Most Requested Feature":
-                    if (mostRequestedFeatures.isEmpty()) {
-                        mostRequestedFeatures.append(commentDTO.text());
+                    if (isGlobal || mostRequestedFeatures.isEmpty()) {
+                        mostRequestedFeatures.append(commentDTO.text()).append(" ");
                     }
-                    break;
-                default:
-                    // Handle Uncategorized or add an Uncategorized list if needed
                     break;
             }
         }
