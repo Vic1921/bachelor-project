@@ -6,5 +6,5 @@ import org.adoxx.socialmedia.models.ModelFeedbackOverview;
 import java.util.List;
 
 public interface ICommentCategoryService {
-    ModelFeedbackOverview categorizeComments(List<CommentDTO> text);
+    ModelFeedbackOverview categorizeComments(List<CommentDTO> text, boolean isGlobal);
 }

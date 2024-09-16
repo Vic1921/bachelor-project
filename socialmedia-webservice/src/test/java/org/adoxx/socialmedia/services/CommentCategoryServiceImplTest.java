@@ -26,7 +26,7 @@ class CommentCategoryServiceImplTest {
         CommentDTO featureRequestCommentDTO = new CommentDTO("Can you add more themes?", "3");
 
         // Call the method under test
-        ModelFeedbackOverview overview = service.categorizeComments(List.of(concernCommentDTO, favoriteCommentDTO, featureRequestCommentDTO));
+        ModelFeedbackOverview overview = service.categorizeComments(List.of(concernCommentDTO, favoriteCommentDTO, featureRequestCommentDTO), false);
 
         // Assertions to verify each category is correctly populated
         assertTrue(overview.getTopConcerns().contains(concernCommentDTO.text()), "Top Concerns category not correctly populated.");
@@ -41,10 +41,10 @@ class CommentCategoryServiceImplTest {
         CommentDTO concernComment2DTO = new CommentDTO("Another problem found in the system.", "2");
 
         // Call the method under test
-        ModelFeedbackOverview overview = service.categorizeComments(List.of(concernComment1DTO, concernComment2DTO));
+        ModelFeedbackOverview overview = service.categorizeComments(List.of(concernComment1DTO, concernComment2DTO), true);
 
         // Assertions to verify comments are concatenated
-        String expectedConcatenation = concernComment1DTO.text() + concernComment2DTO.text();
-        assertNotEquals(expectedConcatenation, overview.getTopConcerns(), "Comments in the same category are not concatenated correctly.");
+        String expectedConcatenation = concernComment1DTO.text() + " " + concernComment2DTO.text() + " ";
+        assertEquals(expectedConcatenation, overview.getTopConcerns(), "Comments in the same category are concatenated correctly.");
     }
 }

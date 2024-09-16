@@ -1,4 +1,11 @@
-<div *ngIf="globalKPI">
-  <h1>Global KPI</h1>
-  <app-pie-chart [chartData]="globalKPI"></app-pie-chart>
+<div *ngIf="globalKPI && categoryOverview">
+  <h1>Global KPI Dashboard</h1>
+  <div style="display: flex;">
+    <div style="flex: 1;">
+      <app-pie-chart [chartData]="globalKPI"></app-pie-chart>
+    </div>
+    <div style="flex: 1;">
+      <app-category-table [data]="categoryOverview"></app-category-table>
+    </div>
+  </div>
 </div>

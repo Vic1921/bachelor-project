@@ -38,7 +38,7 @@ public class AnalysisController {
     @PostMapping("/categorized/{pinId}")
     public ModelFeedbackOverview getCategories(@PathVariable String pinId, @RequestBody List<SentimentResultDTO> sentimentResultDTOList) {
         List<CommentDTO> commentDTOS = sentimentResultDTOList.stream().map(SentimentResultDTO::commentDTO).toList();
-        return categoryService.categorizeComments(commentDTOS);
+        return categoryService.categorizeComments(commentDTOS, false);
     }
 
     @PostMapping("/sentiment-summary/{pinId}")
@@ -51,8 +51,13 @@ public class AnalysisController {
         pinCommentService.postComment(pinId, modelFeedbackOverview);
     }
 
-    @PostMapping("/global-kpi")
+    @GetMapping("/global-kpi")
     public Map<String, Integer> getGlobalKPI() {
         return globalKPIService.aggregateSentimentData();
+    }
+
+    @GetMapping("/global-kpi/category")
+    public ModelFeedbackOverview getGlobalKPICategory() {
+        return globalKPIService.aggregateComments();
     }
 }

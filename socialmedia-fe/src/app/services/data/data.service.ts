@@ -30,7 +30,11 @@ export class DataService {
   }
 
   getGlobalKPI(): Observable<Map<string, number>> {
-    return this.http.post<Map<string, number>>(`${this.baseUrl}/global-kpi`, {});
+    return this.http.get<Map<string, number>>(`${this.baseUrl}/global-kpi`, {});
+  }
+
+  getGlobalKPIByCategory(): Observable<ModelFeedbackOverview> {
+    return this.http.get<ModelFeedbackOverview>(`${this.baseUrl}/global-kpi/category`, {});
   }
 
 }
