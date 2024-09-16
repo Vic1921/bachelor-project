@@ -3,10 +3,8 @@ package org.adoxx.socialmedia.services;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.WheelInput;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class PinterestScraperService {
+public class PinterestWebService {
 
     private WebDriver driver;
     private boolean loggedIn = false;
@@ -43,7 +41,7 @@ public class PinterestScraperService {
                 log.info("ChromeDriver path: {}", chromeDriverPath);
 
                 ChromeOptions options = new ChromeOptions();
-                //options.addArguments("--headless");
+                options.addArguments("--headless");
                 options.addArguments("--disable-gpu");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
@@ -188,6 +186,9 @@ public class PinterestScraperService {
             return;
         }
 
+        String commentSectionXPath = "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div";
+        String postButtonXPath = "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div/div/div[2]/div/button";
+
         try {
             driver.get("https://www.pinterest.com/pin/" + pinId);
 
@@ -203,12 +204,12 @@ public class PinterestScraperService {
             ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,250)", "");
 
             // Find the comment box and post the comment
-            WebElement commentBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div[1]/div/div/div/div/div[2]/div")));
+            WebElement commentBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(commentSectionXPath)));
             commentBox.click();
             commentBox.sendKeys(comment);
 
             // Find the submit button and click it
-            WebElement postButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div/div/div[2]/div/button")));
+            WebElement postButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(postButtonXPath)));
             postButton.click();
         } catch (Exception e) {
             log.error("Posting comment failed", e);

@@ -1,14 +1,12 @@
 package org.adoxx.socialmedia.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.adoxx.socialmedia.exceptions.CommentException;
 import org.adoxx.socialmedia.exceptions.PinException;
 import org.adoxx.socialmedia.models.ModelFeedbackOverview;
 import org.adoxx.socialmedia.models.entities.Comment;
 import org.adoxx.socialmedia.models.entities.Pin;
 import org.adoxx.socialmedia.models.responses.CommentDTO;
 import org.adoxx.socialmedia.models.responses.PinDTO;
-import org.adoxx.socialmedia.models.responses.SentimentResultDTO;
 import org.adoxx.socialmedia.repositories.CommentRepository;
 import org.adoxx.socialmedia.repositories.PinRepository;
 import org.adoxx.socialmedia.util.CommentMapper;
@@ -24,14 +22,14 @@ public class PinCommentService {
 
     private final CommentRepository commentRepository;
     private final PinRepository pinRepository;
-    private final PinterestScraperService pinterestScraperService;
+    private final PinterestWebService pinterestWebService;
     private PinterestServiceImpl pinterestService;
 
     @Autowired
-    public PinCommentService(PinRepository pinRepository, CommentRepository commentRepository, PinterestScraperService pinterestScraperService, PinterestServiceImpl pinterestService) {
+    public PinCommentService(PinRepository pinRepository, CommentRepository commentRepository, PinterestWebService pinterestWebService, PinterestServiceImpl pinterestService) {
         this.pinRepository = pinRepository;
         this.commentRepository = commentRepository;
-        this.pinterestScraperService = pinterestScraperService;
+        this.pinterestWebService = pinterestWebService;
         this.pinterestService = pinterestService;
     }
 
@@ -43,7 +41,7 @@ public class PinCommentService {
         // Check if comments are already in the database or this is the first time this method is called
         if (pin.getComments().isEmpty()) {
             log.info("No comments found in the database for pin with id: {}. Fetching from Pinterest.", pinId);
-            List<String> rawComments = pinterestScraperService.fetchComments(pinId);
+            List<String> rawComments = pinterestWebService.fetchComments(pinId);
 
             log.info("Saving comments for pin with id: {}", pinId);
             List<Comment> newComments = rawComments.stream()
@@ -77,7 +75,7 @@ public class PinCommentService {
         }
 
         log.info("Fetching and updating comments for pin with id: {}", pinId);
-        List<String> rawComments = pinterestScraperService.fetchComments(pinId);
+        List<String> rawComments = pinterestWebService.fetchComments(pinId);
 
         log.info("Saving comments for pin with id: {}", pinId);
         List<Comment> newComments = rawComments.stream()
@@ -112,7 +110,7 @@ public class PinCommentService {
 
         // Post the comment using the scraper
         log.info("Posting comment for pin with id: {}", pinId);
-        pinterestScraperService.postComment(pinId, comment);
+        pinterestWebService.postComment(pinId, comment);
 
         // Save the new comment to the database
         Comment newComment = CommentMapper.toEntity(comment, pinId);

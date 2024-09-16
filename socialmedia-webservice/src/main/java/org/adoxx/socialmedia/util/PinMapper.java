@@ -85,7 +85,6 @@ public class PinMapper {
             }
 
         } catch (Exception e) {
-            // TODO: Handle exceptions, e.g., log an error or throw a custom exception
             e.printStackTrace();
             return null;
         }
