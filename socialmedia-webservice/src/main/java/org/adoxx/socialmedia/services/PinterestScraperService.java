@@ -5,10 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.WheelInput;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.openqa.selenium.interactions.WheelInput.ScrollOrigin;
 
 import jakarta.annotation.PreDestroy;
 
@@ -40,11 +43,11 @@ public class PinterestScraperService {
                 log.info("ChromeDriver path: {}", chromeDriverPath);
 
                 ChromeOptions options = new ChromeOptions();
-                options.addArguments("--headless");
+                //options.addArguments("--headless");
                 options.addArguments("--disable-gpu");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
-                options.addArguments("--window-size=1300,760");
+                options.addArguments("--window-size=2300,1352");
 
                 driver = WebDriverManager.chromedriver().capabilities(options).create();
 
@@ -92,53 +95,49 @@ public class PinterestScraperService {
         }
     }
 
+
     private List<WebElement> scrollUntilAllCommentsLoaded(WebDriver driver, WebDriverWait wait) {
-        String[] xpaths = {
-                "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]",
-                "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]/div/div[2]/div[2]/div[5]/div/div/div/div/div[2]/div",
-                "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]",
-                "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]/div",
-                "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]"
-        };
+        String absoluteXpath = "/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[1]/div[2]";
 
-        for (String xpath : xpaths) {
-            try {
-                // Get the total number of comments
-                WebElement commentsHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h2[contains(text(), 'Comments')]/..")));
-                String commentsText = commentsHeader.getText();
-                int totalComments = Integer.parseInt(commentsText.replaceAll("\\D+", ""));
-                log.info("Total comments: {}", totalComments);
+        try {
+            // Get the total number of comments
+            WebElement commentsHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//h2[contains(text(), 'Comments')]/..")));
+            String commentsText = commentsHeader.getText();
+            int totalComments = Integer.parseInt(commentsText.replaceAll("\\D+", ""));
+            int targetComments = totalComments * 2; // Because the loadedComments get doubled
+            log.info("Total comments: {}", totalComments);
 
-                int loadedComments = 0;
-                int previousLoadedComments = -1;
-                List<WebElement> commentElements = null;
-                WebElement commentsBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+            int loadedComments = 0;
+            List<WebElement> commentElements = null;
+            WebElement commentsBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(absoluteXpath)));
 
-                while (loadedComments < totalComments) {
-                    // Scroll within the comments box to load more comments
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(false)", commentsBox);
-                    TimeUnit.SECONDS.sleep(2); // Wait for comments to load
+            // Create an instance of Actions
+            Actions actions = new Actions(driver);
 
-                    // Update the number of loaded comments
-                    commentElements = driver.findElements(By.className("text-container"));
-                    loadedComments = commentElements.size();
-                    log.info("Loaded comments: {}", loadedComments);
+            // Focus on the comments box
+            actions.moveToElement(commentsBox).click().perform();
 
-                    // Break the loop if loaded comments count doesn't change
-                    if (loadedComments == previousLoadedComments) {
-                        break;
-                    }
-                    previousLoadedComments = loadedComments;
-                }
-                return commentElements;
-            } catch (Exception e) {
-                log.error("Error with XPath: " + xpath, e);
+            while (loadedComments < totalComments*2) {
+                // Scroll within the comments box by 500 pixels
+                actions.scrollFromOrigin(ScrollOrigin.fromElement(commentsBox), 0, 500).perform();
+
+                TimeUnit.SECONDS.sleep(1); // Wait for comments to load
+
+                // Update the number of loaded comments
+                commentElements = driver.findElements(By.className("text-container"));
+                loadedComments = commentElements.size();
+                log.info("Loaded comments: {}", loadedComments);
             }
+            return commentElements;
+        } catch (Exception e) {
+            log.error("Error while loading comments", e);
         }
 
-        log.error("All XPath attempts failed to load comments");
+        log.error("Failed to load comments");
         return List.of();
     }
+
 
     public List<String> fetchComments(String pinId) {
         if (!login()) {
@@ -152,7 +151,7 @@ public class PinterestScraperService {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(12));
 
             // Scroll a little to ensure the comments section can load
-            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,250)", "");
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)", "");
 
             // Wait a bit to give the page time to load comments
             TimeUnit.SECONDS.sleep(5);
@@ -209,7 +208,7 @@ public class PinterestScraperService {
             commentBox.sendKeys(comment);
 
             // Find the submit button and click it
-            WebElement postButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div/div/div[2]/div")));
+            WebElement postButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/div/div/div/div/div[2]/div/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div[2]/div/div/div/div/div/div/div/div/div/div[2]/div/div/div[2]/div/button")));
             postButton.click();
         } catch (Exception e) {
             log.error("Posting comment failed", e);

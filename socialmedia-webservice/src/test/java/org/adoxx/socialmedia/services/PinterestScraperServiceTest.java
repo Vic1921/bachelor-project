@@ -44,7 +44,7 @@ class PinterestScraperServiceTest {
 
     @Test
     void testPostComment() {
-        pinterestScraperService.postComment("1124703706933675772", "Test comment from testPostComment");
+        pinterestScraperService.postComment("1124703706933675772", "Test comment from testPostComment inside the TestClass");
         //assertNotNull(comment);
     }
 }
