@@ -1,10 +1,11 @@
-<!-- Update `pin-detail.component.html` to use the 600x image size for the detailed pin display -->
-<div *ngIf="pin">
+<div class="pin-detail-container" *ngIf="pin">
   <h2>{{ pin.title }}</h2>
   <p>{{ pin.description }}</p>
   <div *ngIf="pin.media">
     <img [src]="pin.media.images['600x'].url" [width]="pin.media.images['600x'].width" [height]="pin.media.images['600x'].height">
   </div>
-  <button (click)="performAnalysis()">Perform Analysis</button>
-  <button (click)="deletePin()">Delete Pin</button>
+  <div class="button-container">
+    <p-button label="Perform Analysis" (click)="performAnalysis()"></p-button>
+    <p-button label="Delete Pin" (click)="deletePin()"></p-button>
+  </div>
 </div>

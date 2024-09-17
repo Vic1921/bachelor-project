@@ -3,11 +3,12 @@ import {ActivatedRoute, Router, RouterLink, RouterOutlet} from '@angular/router'
 import { PinService } from '../../services/pin/pin.service';
 import { CommonModule } from '@angular/common';
 import {PinDTO} from "../../models/pin-dto";
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-pin-detail',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule],
+  imports: [RouterOutlet, RouterLink, CommonModule, ButtonModule],
   templateUrl: './pin-detail.component.html',
   styleUrls: ['./pin-detail.component.css']
 })
