@@ -1,1 +1,15 @@
+body {
+  background-image: url('/assets/images/pinterest_background_image.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  color: #fff; /* Optional: Adjust text color for better contrast */
+}
 
+/* Ensure that content backgrounds are semi-transparent to enhance readability */
+.content-container {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+}
