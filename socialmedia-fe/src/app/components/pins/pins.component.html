@@ -1,28 +1,51 @@
-<div>
+<div class="pins-container">
   <h2>Pins</h2>
-  <ul>
-    <li *ngFor="let pin of pins$ | async">
-      <h3>{{ pin.title }}</h3>
-      <p>{{ pin.description }}</p>
-      <div *ngIf="pin.media">
-        <img [src]="pin.media.images['400x300'].url" [width]="pin.media.images['400x300'].width" [height]="pin.media.images['400x300'].height">
-      </div>
-      <p><a [routerLink]="['/pin', pin.id]">View Pin Details</a></p>
-    </li>
-  </ul>
+  <div class="pins-grid">
+    <p-card
+      *ngFor="let pin of pins$ | async"
+      header="{{ pin.title }}"
+      subheader="{{ pin.description }}"
+      (click)="viewPinDetails(pin.id)"
+      class="pin-card"
+    >
+      <ng-template pTemplate="header">
+        <img
+          alt="{{ pin.title }}"
+          [src]="getPinImageUrl(pin)"
+          class="pin-image"
+        />
+      </ng-template>
+    </p-card>
+  </div>
 
   <h3>Create Pin</h3>
-  <form [formGroup]="pinForm" (ngSubmit)="createPin()">
-    <label for="boardId">Board ID:</label>
-    <input id="boardId" formControlName="boardId" />
-    <label for="title">Title:</label>
-    <input id="title" formControlName="title" />
-    <label for="description">Description:</label>
-    <input id="description" formControlName="description" />
-    <label for="altText">Alt Text:</label>
-    <input id="altText" formControlName="altText" />
-    <label for="image">Image:</label>
-    <input type="file" (change)="onFileSelected($event)" />
-    <button type="submit">Create Pin</button>
-  </form>
+  <div class="form-container">
+    <div class="form-box">
+      <form [formGroup]="pinForm" (ngSubmit)="createPin()">
+        <div class="p-fluid">
+          <div class="p-field">
+            <label for="title">Title </label>
+            <input pInputText id="title" formControlName="title" />
+          </div>
+          <div class="p-field">
+            <label for="description">Description </label>
+            <input pInputText id="description" formControlName="description" />
+          </div>
+          <div class="p-field">
+            <label for="altText">Alt Text (optional) </label>
+            <input pInputText id="altText" formControlName="altText" />
+          </div>
+          <div class="p-field">
+            <label for="boardId">Board ID (optional) </label>
+            <input pInputText id="boardId" formControlName="boardId" />
+          </div>
+          <div class="p-field">
+            <label for="image">Image </label>
+            <input type="file" (change)="onFileSelected($event)" />
+          </div>
+          <p-button label="Submit" type="submit"></p-button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

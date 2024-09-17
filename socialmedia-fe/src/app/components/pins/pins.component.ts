@@ -1,19 +1,28 @@
-import {Component, OnInit} from '@angular/core';
-import { RouterLink } from "@angular/router";
-import { CommonModule } from "@angular/common";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { PinService } from "../../services/pin/pin.service";
-import { Observable, of } from "rxjs";
-import { PinDTO } from "../../models/pin-dto";
-import { PinRequest } from "../../models/pin-request";
-import { PinRequestBase64 } from "../../models/pin-request-base64";
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PinService } from '../../services/pin/pin.service';
+import { Observable, of } from 'rxjs';
+import { PinDTO } from '../../models/pin-dto';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-pins',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    RouterLink,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CardModule,
+    ButtonModule,
+    FileUploadModule,
+  ],
   templateUrl: './pins.component.html',
-  styleUrl: './pins.component.css'
+  styleUrls: ['./pins.component.css'],
 })
 export class PinsComponent implements OnInit {
   pins$: Observable<PinDTO[]> = of([]);
@@ -22,13 +31,14 @@ export class PinsComponent implements OnInit {
 
   constructor(
     private pinService: PinService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.pinForm = this.fb.group({
       boardId: [''],
       title: [''],
       description: [''],
-      altText: ['']
+      altText: [''],
     });
   }
 
@@ -37,7 +47,7 @@ export class PinsComponent implements OnInit {
   }
 
   onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0] || null;
+    this.selectedFile = event.files[0] || null;
   }
 
   createPin(): void {
@@ -60,5 +70,12 @@ export class PinsComponent implements OnInit {
     });
   }
 
+  viewPinDetails(pinId: string): void {
+    this.router.navigate(['/pin', pinId]);
+  }
 
+  getPinImageUrl(pin: PinDTO): string {
+    // If the pin has an image, return the image URL, otherwise return a placeholder image
+    return pin?.media?.images?.['400x300']?.url || 'assets/images/placeholder.png';
+  }
 }
