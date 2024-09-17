@@ -1,11 +1,21 @@
 <div *ngIf="globalKPI && categoryOverview">
   <h1>Global KPI Dashboard</h1>
-  <div style="display: flex;">
-    <div style="flex: 1;">
-      <app-pie-chart [chartData]="globalKPI"></app-pie-chart>
+  <div class="dashboard-container">
+    <div class="chart-container">
+      <p-card>
+        <ng-template pTemplate="header">
+          <h2>Global Sentiment Distribution</h2>
+        </ng-template>
+        <app-pie-chart [chartData]="globalKPI"></app-pie-chart>
+      </p-card>
     </div>
-    <div style="flex: 1;">
-      <app-category-table [data]="categoryOverview"></app-category-table>
+    <div class="table-container">
+      <p-card>
+        <ng-template pTemplate="header">
+          <h2>Feedback Overview</h2>
+        </ng-template>
+        <app-category-table [data]="categoryOverview"></app-category-table>
+      </p-card>
     </div>
   </div>
 </div>

@@ -1,0 +1,21 @@
+.dashboard-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.chart-container,
+.table-container {
+  flex: 1 1 400px;
+  max-width: 600px;
+}
+
+p-card {
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 40px;
+}
