@@ -1,18 +1,24 @@
-<table>
-  <tr>
-    <th>Category</th>
-    <th>Details</th>
-  </tr>
-  <tr>
-    <td>Top Concerns</td>
-    <td>{{ data.topConcerns }}</td>
-  </tr>
-  <tr>
-    <td>Favorite Aspects</td>
-    <td>{{ data.favoriteAspects }}</td>
-  </tr>
-  <tr>
-    <td>Most Requested Features</td>
-    <td>{{ data.mostRequestedFeatures }}</td>
-  </tr>
-</table>
+<p-table [value]="tableData" [responsiveLayout]="'scroll'">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Category</th>
+      <th>Details</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData>
+    <tr>
+      <td>{{ rowData.category }}</td>
+      <td>
+        <span>
+          {{ truncateText(rowData.content, 100) }}
+          <a *ngIf="rowData.content.length > 100" (click)="rowData.expanded = !rowData.expanded" style="cursor:pointer; color:blue;">
+            {{ rowData.expanded ? 'See Less' : 'See More' }}
+          </a>
+        </span>
+        <div *ngIf="rowData.expanded">
+          {{ rowData.content }}
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

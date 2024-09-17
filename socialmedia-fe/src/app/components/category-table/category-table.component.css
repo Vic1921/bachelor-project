@@ -1,0 +1,12 @@
+p-table {
+  width: 100%;
+}
+
+td {
+  vertical-align: top;
+}
+
+a {
+  margin-left: 5px;
+  text-decoration: underline;
+}

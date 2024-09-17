@@ -6,11 +6,12 @@ import { CategoryTableComponent } from '../category-table/category-table.compone
 import { DataService } from '../../services/data/data.service';
 import { ModelFeedbackOverview } from '../../models/model-feedback-overview';
 import { SentimentResult } from '../../models/sentiment-result';
+import {ButtonModule} from "primeng/button";
 
 @Component({
   selector: 'app-pin-analysis',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule, PieChartComponent, CategoryTableComponent],
+  imports: [RouterOutlet, RouterLink, CommonModule, PieChartComponent, CategoryTableComponent, ButtonModule],
   templateUrl: './pin-analysis.component.html',
   styleUrls: ['./pin-analysis.component.css']
 })

@@ -1,12 +1,12 @@
 <div *ngIf="sentimentSummary && feedbackOverview">
   <h1>Analysis Dashboard</h1>
-  <div style="display: flex;">
-    <div style="flex: 1;">
+  <div class="dashboard-container">
+    <div class="chart-container">
       <app-pie-chart [chartData]="sentimentSummary"></app-pie-chart>
     </div>
-    <div style="flex: 1;">
+    <div class="table-container">
       <app-category-table [data]="feedbackOverview"></app-category-table>
+      <p-button label="Post on Pinterest" (click)="postFeedbackOnPinterest()"></p-button>
     </div>
   </div>
-  <button (click)="postFeedbackOnPinterest()">Post Feedback on Pinterest</button>
 </div>
