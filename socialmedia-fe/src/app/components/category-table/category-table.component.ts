@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
@@ -12,7 +12,7 @@ import {ModelFeedbackOverview} from "../../models/model-feedback-overview";
   templateUrl: './category-table.component.html',
   styleUrls: ['./category-table.component.css'],
 })
-export class CategoryTableComponent implements OnInit {
+export class CategoryTableComponent implements OnInit, OnChanges {
   @Input() data: ModelFeedbackOverview = {
     topConcerns: '',
     favoriteAspects: '',
@@ -36,5 +36,12 @@ export class CategoryTableComponent implements OnInit {
       { category: 'Most Requested Features', content: this.data.mostRequestedFeatures, expanded: false },
     ];
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data']) {
+      this.prepareTableData();
+    }
+  }
+
 
 }

@@ -9,15 +9,20 @@
     <tr>
       <td>{{ rowData.category }}</td>
       <td>
-        <span>
+        <span
+          *ngIf="rowData.content"
+          pTooltip="{{ rowData.content }}"
+          tooltipPosition="top"
+        >
           {{ truncateText(rowData.content, 100) }}
-          <a *ngIf="rowData.content.length > 100" (click)="rowData.expanded = !rowData.expanded" style="cursor:pointer; color:blue;">
-            {{ rowData.expanded ? 'See Less' : 'See More' }}
-          </a>
+          <span
+            *ngIf="(rowData.content?.length || 0) > 100"
+            style="color: blue;"
+          >
+            (Hover to see more)
+          </span>
         </span>
-        <div *ngIf="rowData.expanded">
-          {{ rowData.content }}
-        </div>
+        <span *ngIf="!rowData.content">No data available.</span>
       </td>
     </tr>
   </ng-template>
