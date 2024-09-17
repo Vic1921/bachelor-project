@@ -1,0 +1,22 @@
+.board-detail-container {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+}
+
+.p-card {
+  text-align: center;
+}
+
+.p-card .p-card-header {
+  text-align: center;
+}
+
+.p-card p {
+  text-align: center;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: space-between;
+}

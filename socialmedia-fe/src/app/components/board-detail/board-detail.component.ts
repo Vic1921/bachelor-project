@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {BoardService} from "../../services/board/board.service";
 import {CommonModule} from "@angular/common";
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-board-detail',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule],
+  imports: [RouterOutlet, RouterLink, CommonModule, CardModule, ButtonModule],
   templateUrl: './board-detail.component.html',
   styleUrls: ['./board-detail.component.css']
 })

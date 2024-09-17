@@ -1,5 +1,19 @@
-<div *ngIf="board">
-  <h2>{{ board.name }}</h2>
-  <p>{{ board.description }}</p>
-  <button (click)="deleteBoard()">Delete Board</button>
+<div *ngIf="board" class="board-detail-container">
+  <p-card header="{{ board.name }}" [style]="{ width: '400px' }">
+    <p>{{ board.description }}</p>
+    <ng-template pTemplate="footer">
+      <div class="footer-buttons">
+        <p-button
+          label="Back to Boards"
+          [routerLink]="['/boards']"
+          styleClass="p-button-text"
+        ></p-button>
+        <p-button
+          label="Delete Board"
+          (click)="deleteBoard()"
+          styleClass="p-button-danger"
+        ></p-button>
+      </div>
+    </ng-template>
+  </p-card>
 </div>
