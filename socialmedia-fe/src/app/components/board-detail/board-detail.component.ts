@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, RouterLink, RouterOutlet} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {BoardService} from "../../services/board/board.service";
 import {CommonModule} from "@angular/common";
 
@@ -15,7 +15,8 @@ export class BoardDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private boardService: BoardService
+    private boardService: BoardService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -25,7 +26,7 @@ export class BoardDetailComponent implements OnInit {
 
   deleteBoard(): void {
     this.boardService.deleteBoard(this.board.id).subscribe(() => {
-      // Handle successful delete, e.g., navigate back to boards list
+      this.router.navigate(['/boards']);
     });
   }
 

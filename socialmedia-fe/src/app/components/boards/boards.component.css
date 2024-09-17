@@ -1,0 +1,48 @@
+.boards-container {
+  text-align: center;
+  margin: 20px;
+}
+
+.boards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.board-card {
+  position: relative;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board-name {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.board-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.create-board-form {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.p-field {
+  width: 300px;
+  margin-bottom: 15px;
+}
+
+.p-button {
+  width: 300px;
+}

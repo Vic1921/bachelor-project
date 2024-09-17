@@ -6,4 +6,5 @@ export interface BoardDto {
   followerCount: number;
   createdAt: string;
   thumbnailUrl: string;
+  pinThumbnailUrls: string[];
 }

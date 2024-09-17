@@ -1,14 +1,49 @@
-<div>
+<div class="boards-container">
   <h2>Boards</h2>
-  <ul>
-    <li *ngFor="let board of boards$ | async">
-      <a [routerLink]="['/board', board.id]">{{ board.name }}</a>
-    </li>
-  </ul>
-  <div>
+  <div class="boards-grid">
+    <p-card
+      *ngFor="let board of boards$ | async"
+      [style]="{ width: '300px' }"
+      class="board-card"
+    >
+      <div class="card-content">
+        <div class="board-name">{{ board.name }}</div>
+        <div class="board-actions">
+          <p-button
+            label="View"
+            [routerLink]="['/board', board.id]"
+            styleClass="p-button-text"
+          ></p-button>
+          <p-button
+            label="Delete"
+            (click)="deleteBoard(board.id)"
+            styleClass="p-button-text p-button-danger"
+          ></p-button>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <div class="create-board-form">
     <h3>Create New Board</h3>
-    <input type="text" placeholder="Name" [(ngModel)]="newBoardName">
-    <input type="text" placeholder="Description" [(ngModel)]="newBoardDescription">
-    <button (click)="createBoard()">Create</button>
+    <div class="p-fluid">
+      <div class="p-field">
+        <input
+          pInputText
+          id="name"
+          placeholder="Name"
+          [(ngModel)]="newBoardName"
+        />
+      </div>
+      <div class="p-field">
+        <input
+          pInputText
+          id="description"
+          placeholder="Description"
+          [(ngModel)]="newBoardDescription"
+        />
+      </div>
+      <p-button label="Create" (click)="createBoard()"></p-button>
+    </div>
   </div>
 </div>
