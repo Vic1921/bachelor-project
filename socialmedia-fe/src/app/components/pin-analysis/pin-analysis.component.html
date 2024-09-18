@@ -6,7 +6,11 @@
     </div>
     <div class="table-container">
       <app-category-table [data]="feedbackOverview"></app-category-table>
-      <p-button label="Post on Pinterest" (click)="postFeedbackOnPinterest()"></p-button>
+      <p-button
+        label="Post on Pinterest"
+        (click)="postFeedbackOnPinterest()"
+        [disabled]="isPosting">
+      </p-button>
     </div>
   </div>
 </div>
