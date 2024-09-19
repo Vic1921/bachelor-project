@@ -47,7 +47,8 @@ export class PinsComponent implements OnInit {
   }
 
   onFileSelected(event: any): void {
-    this.selectedFile = event.files[0] || null;
+    console.log(event);
+    this.selectedFile = event.files?.[0] || null;
   }
 
   createPin(): void {
